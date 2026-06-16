@@ -62,7 +62,7 @@
     // =========================================
     // Filtrage et affichage
     // =========================================
-    const grid = document.getElementById('games-grid');
+    const catGrid = document.getElementById('games-grid');
     const noResults = document.getElementById('no-results');
     const countEl = document.getElementById('cat-count');
 
@@ -73,10 +73,10 @@
     countEl.textContent = `${resultats.length} jeu${resultats.length > 1 ? 'x' : ''} trouvé${resultats.length > 1 ? 's' : ''}`;
 
     if (resultats.length === 0) {
-      grid.style.display = 'none';
+      catGrid.style.display = 'none';
       noResults.style.display = 'block';
     } else {
-      resultats.forEach(jeu => grid.appendChild(createCard(jeu)));
+      resultats.forEach(jeu => catGrid.appendChild(createCard(jeu)));
     }
   </script>
 
