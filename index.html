@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CroissantGames — Jeux gratuits en ligne</title>
+  <meta name="description" content="Joue à des centaines de jeux gratuits en ligne sur CroissantGames, sans téléchargement ni inscription. Action, puzzle, course, sport et aventure.">
+  <link rel="canonical" href="https://croissantgames.fr/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CroissantGames — Jeux gratuits en ligne">
+  <meta property="og:description" content="Joue à des centaines de jeux gratuits en ligne, sans téléchargement.">
+  <meta property="og:image" content="https://croissantgames.fr/assets/og-image.jpg">
+  <meta property="og:url" content="https://croissantgames.fr/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CroissantGames — Jeux gratuits en ligne">
+  <meta name="twitter:description" content="Joue à des centaines de jeux gratuits en ligne, sans téléchargement.">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CroissantGames",
+    "url": "https://croissantgames.fr/",
+    "description": "Jeux gratuits en ligne, sans téléchargement ni inscription."
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo"><a href="index.html">Croissant<span>Games</span></a></div>
+
+    <nav class="main-nav">
+      <a href="categorie.html?cat=Action">Action</a>
+      <a href="categorie.html?cat=Puzzle">Puzzle</a>
+      <a href="categorie.html?cat=Course">Course</a>
+      <a href="categorie.html?cat=Sport">Sport</a>
+      <a href="categorie.html?cat=Aventure">Aventure</a>
+    </nav>
+
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Chercher un jeu...">
+    </div>
+  </header>
+
+  <!-- Pub AdSense -->
+  <div class="ad-banner ad-728x90">
+    <!-- Emplacement Google AdSense 728x90 -->
+  </div>
+
+  <main>
+
+    <!-- Favoris -->
+    <section id="favoris-section" class="games-section" hidden>
+      <h2>❤️ Mes favoris</h2>
+      <div class="games-grid" id="favoris-grid"></div>
+    </section>
+
+    <!-- Récemment joués -->
+    <section id="recents-section" class="games-section" hidden>
+      <h2>🕐 Récemment joués</h2>
+      <div class="games-grid" id="recents-grid"></div>
+    </section>
+
+    <!-- Jeux populaires -->
+    <section class="games-section">
+      <h2>Jeux populaires</h2>
+      <div class="games-grid" id="games-grid">
+        <!-- Skeleton loaders insérés par JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Pub AdSense bas de page -->
+  <div class="ad-banner ad-728x90">
+    <!-- Emplacement Google AdSense 728x90 -->
+  </div>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 CroissantGames — Tous droits réservés</p>
+    <a href="mentions-legales.html">Mentions légales</a>
+  </footer>
+
+  <button id="back-to-top" aria-label="Retour en haut">↑</button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title id="page-title">Jeu — CroissantGames</title>
+  <meta id="meta-description" name="description" content="Joue gratuitement en ligne sur CroissantGames.">
+  <link id="canonical-link" rel="canonical" href="https://croissantgames.fr/jeu.html">
+
+  <!-- Open Graph (rempli dynamiquement) -->
+  <meta id="og-title" property="og:title" content="Jeu — CroissantGames">
+  <meta id="og-description" property="og:description" content="Joue gratuitement en ligne sur CroissantGames.">
+  <meta id="og-url" property="og:url" content="https://croissantgames.fr/jeu.html">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta id="twitter-title" name="twitter:title" content="Jeu — CroissantGames">
+  <meta id="twitter-description" name="twitter:description" content="Joue gratuitement en ligne sur CroissantGames.">
+
+  <!-- JSON-LD (injecté dynamiquement par JS) -->
+  <script id="json-ld" type="application/ld+json"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Styles spécifiques à la page jeu */
+    .iframe-wrap {
+      position: relative;
+      width: 800px;
+      max-width: 100%;
+    }
+    #game-frame {
+      width: 800px;
+      max-width: 100%;
+      height: 600px;
+      border: none;
+      display: block;
+      background: #000;
+    }
+    .pause-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(83, 58, 183, 0.75);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      z-index: 5;
+    }
+    .pause-overlay.visible { display: flex; }
+
+    .error-box {
+      width: 800px;
+      max-width: 100%;
+      height: 600px;
+      background: #1a1a2e;
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      border-radius: 8px;
+    }
+    .error-box.visible { display: flex; }
+    .error-box button {
+      background: #a78bfa;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    #status-msg {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-actions {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .game-actions button {
+      background: #1a1a2e;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .game-actions button:hover { background: #2a2a45; }
+
+    #play-counter {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header (identique à index.html) -->
+  <header class="site-header">
+    <div class="logo"><a href="index.html">Croissant<span>Games</span></a></div>
+    <nav class="main-nav">
+      <a href="categorie.html?cat=Action">Action</a>
+      <a href="categorie.html?cat=Puzzle">Puzzle</a>
+      <a href="categorie.html?cat=Course">Course</a>
+      <a href="categorie.html?cat=Sport">Sport</a>
+      <a href="categorie.html?cat=Aventure">Aventure</a>
+    </nav>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Chercher un jeu...">
+    </div>
+  </header>
+
+  <main class="game-layout">
+
+    <!-- Pub gauche -->
+    <div class="ad-banner ad-160x600"><!-- AdSense 160x600 --></div>
+
+    <div class="game-container">
+      <h1 id="game-title">Chargement...</h1>
+      <div id="status-msg">⏳ Chargement du jeu...</div>
+
+      <div class="iframe-wrap">
+        <iframe id="game-frame" allowfullscreen scrolling="no" frameborder="0"></iframe>
+        <div class="pause-overlay" id="pause-overlay">⏸ Pub en cours...</div>
+      </div>
+
+      <div class="error-box" id="error-box">
+        <p>❌ Une erreur est survenue lors du chargement du jeu.</p>
+        <button id="retry-btn">Réessayer</button>
+      </div>
+
+      <div class="game-actions">
+        <button id="fullscreen-btn">⛶ Plein écran</button>
+      </div>
+
+      <div id="play-counter"></div>
+    </div>
+
+    <!-- Pub droite -->
+    <div class="ad-banner ad-160x600"><!-- AdSense 160x600 --></div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 CroissantGames — Tous droits réservés</p>
+    <a href="mentions-legales.html">Mentions légales</a>
+  </footer>
+
+  <button id="back-to-top" aria-label="Retour en haut">↑</button>
+
+  <script>
+    // =========================================
+    // Lecture des paramètres URL
+    // =========================================
+    const params = new URLSearchParams(window.location.search);
+    const gameId = params.get('id') || '';
+    const gameName = params.get('nom') || 'Jeu inconnu';
+    const gameWidth = parseInt(params.get('w'), 10) || 800;
+    const gameHeight = parseInt(params.get('h'), 10) || 600;
+    const pageUrl = window.location.href;
+
+    // =========================================
+    // Mise à jour du titre et du H1
+    // =========================================
+    document.getElementById('game-title').textContent = gameName;
+    document.getElementById('page-title').textContent = gameName + ' — CroissantGames';
+
+    // =========================================
+    // SEO dynamique
+    // =========================================
+    const description = `Joue gratuitement à ${gameName} en ligne sur CroissantGames, sans téléchargement ni inscription.`;
+    document.getElementById('meta-description').setAttribute('content', description);
+    document.getElementById('canonical-link').setAttribute('href', pageUrl);
+    document.getElementById('og-title').setAttribute('content', gameName + ' — CroissantGames');
+    document.getElementById('og-description').setAttribute('content', description);
+    document.getElementById('og-url').setAttribute('content', pageUrl);
+    document.getElementById('twitter-title').setAttribute('content', gameName + ' — CroissantGames');
+    document.getElementById('twitter-description').setAttribute('content', description);
+
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": gameName,
+      "url": pageUrl,
+      "applicationCategory": "Game",
+      "operatingSystem": "Any browser"
+    };
+    document.getElementById('json-ld').textContent = JSON.stringify(jsonLd);
+
+    // =========================================
+    // Récemment joués (localStorage, max 6, sans doublon)
+    // =========================================
+    function addToRecents(id) {
+      if (!id) return;
+      let recents = JSON.parse(localStorage.getItem('recents') || '[]');
+      recents = recents.filter(r => r !== id); // retire le doublon s'il existe
+      recents.unshift(id); // ajoute en premier
+      recents = recents.slice(0, 6); // garde max 6
+      localStorage.setItem('recents', JSON.stringify(recents));
+    }
+    addToRecents(gameId);
+
+    // =========================================
+    // Compteur de parties jouées
+    // =========================================
+    function incrementPlayCounter(id) {
+      if (!id) return 0;
+      const key = `plays_${id}`;
+      const current = parseInt(localStorage.getItem(key) || '0', 10);
+      const updated = current + 1;
+      localStorage.setItem(key, updated);
+      return updated;
+    }
+    const playCount = incrementPlayCounter(gameId);
+    document.getElementById('play-counter').textContent = `Tu as joué ${playCount} fois à ce jeu`;
+
+    // =========================================
+    // Chargement de l'iframe GameDistribution
+    // =========================================
+    const iframe = document.getElementById('game-frame');
+    const statusMsg = document.getElementById('status-msg');
+    const pauseOverlay = document.getElementById('pause-overlay');
+    const errorBox = document.getElementById('error-box');
+
+    if (gameId) {
+      // On limite la largeur d'affichage à 800px max pour ne pas casser la mise en page,
+      // tout en gardant le ratio d'origine du jeu (utile pour les jeux portrait).
+      const maxDisplayWidth = 800;
+      const ratio = gameHeight / gameWidth;
+      const displayWidth = Math.min(gameWidth, maxDisplayWidth);
+      const displayHeight = Math.round(displayWidth * ratio);
+
+      iframe.style.width = displayWidth + 'px';
+      iframe.style.height = displayHeight + 'px';
+      iframe.parentElement.style.width = displayWidth + 'px';
+
+      const gdUrl = `https://html5.gamedistribution.com/${gameId}/?gd_sdk_referrer_url=${encodeURIComponent(pageUrl)}`;
+      iframe.src = gdUrl;
+    } else {
+      statusMsg.textContent = '❌ Aucun jeu spécifié.';
+    }
+
+    // =========================================
+    // Configuration SDK GameDistribution
+    // =========================================
+    window["GD_OPTIONS"] = {
+      "gameId": gameId,
+      "onEvent": function (event) {
+        switch (event.name) {
+          case "SDK_READY":
+            statusMsg.textContent = '';
+            break;
+          case "SDK_GAME_START":
+            pauseOverlay.classList.remove('visible');
+            break;
+          case "SDK_GAME_PAUSE":
+            pauseOverlay.classList.add('visible');
+            break;
+          case "SDK_ERROR":
+            iframe.style.display = 'none';
+            errorBox.classList.add('visible');
+            break;
+        }
+      }
+    };
+
+    // =========================================
+    // Bouton Réessayer
+    // =========================================
+    document.getElementById('retry-btn').addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    // =========================================
+    // Bouton plein écran
+    // =========================================
+    document.getElementById('fullscreen-btn').addEventListener('click', () => {
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+      }
+    });
+
+    // =========================================
+    // Bouton retour en haut
+    // =========================================
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('visible', window.scrollY > 300);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+  <!-- SDK GameDistribution -->
+  <script src="https://html5.gamedistribution.com/libs/gd/5.0.1/gd-loader.js"></script>
+
+</body>
+</html>
