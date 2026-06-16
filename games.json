@@ -1,12 +1,12 @@
 [
-  { "id": "5d8d11e9919245939a57378a02b8fc8b", "nom": "Jeu 1 (à renommer)", "categorie": "Action" },
-  { "id": "42bfa359db1e405f8cc84b181c206f7c", "nom": "Jeu 2 (à renommer)", "categorie": "Puzzle" },
-  { "id": "b9ad7cca160e4be386d5f62da00ada7e", "nom": "Jeu 3 (à renommer)", "categorie": "Action" },
-  { "id": "63dd731e83704e13b300deff8109f39a", "nom": "Jeu 4 (à renommer)", "categorie": "Aventure" },
-  { "id": "381bb01b67a14e7ea30b5623eb36855e", "nom": "Jeu 5 (à renommer)", "categorie": "Course" },
-  { "id": "665328d407a547f2a003ed3723dedf16", "nom": "Jeu 6 (à renommer)", "categorie": "Puzzle" },
-  { "id": "c4853541e0434d19a5bfdd8c75887cb5", "nom": "Jeu 7 (à renommer)", "categorie": "Puzzle" },
-  { "id": "a9964948ad434acfb106811d323e6464", "nom": "Jeu 8 (à renommer)", "categorie": "Sport" },
-  { "id": "b4ddb7628afc4a6fbd87b775ccf6f45e", "nom": "Jeu 9 (à renommer)", "categorie": "Course" },
-  { "id": "88d7078602364cfd845f7c2796c456c7", "nom": "Jeu 10 (à renommer)", "categorie": "Sport" }
+  { "id": "5d8d11e9919245939a57378a02b8fc8b", "nom": "Jeu 1 (à renommer)", "categorie": "Action", "width": 800, "height": 600 },
+  { "id": "42bfa359db1e405f8cc84b181c206f7c", "nom": "Jeu 2 (à renommer)", "categorie": "Puzzle", "width": 800, "height": 600 },
+  { "id": "b9ad7cca160e4be386d5f62da00ada7e", "nom": "Jeu 3 (à renommer)", "categorie": "Action", "width": 800, "height": 600 },
+  { "id": "63dd731e83704e13b300deff8109f39a", "nom": "Jeu 4 (à renommer)", "categorie": "Aventure", "width": 1200, "height": 1600 },
+  { "id": "381bb01b67a14e7ea30b5623eb36855e", "nom": "Jeu 5 (à renommer)", "categorie": "Course", "width": 1280, "height": 720 },
+  { "id": "665328d407a547f2a003ed3723dedf16", "nom": "Jeu 6 (à renommer)", "categorie": "Puzzle", "width": 480, "height": 800 },
+  { "id": "c4853541e0434d19a5bfdd8c75887cb5", "nom": "Jeu 7 (à renommer)", "categorie": "Puzzle", "width": 450, "height": 800 },
+  { "id": "a9964948ad434acfb106811d323e6464", "nom": "Jeu 8 (à renommer)", "categorie": "Sport", "width": 800, "height": 600 },
+  { "id": "b4ddb7628afc4a6fbd87b775ccf6f45e", "nom": "Jeu 9 (à renommer)", "categorie": "Course", "width": 1280, "height": 720 },
+  { "id": "88d7078602364cfd845f7c2796c456c7", "nom": "Jeu 10 (à renommer)", "categorie": "Sport", "width": 800, "height": 600 }
 ]

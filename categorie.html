@@ -61,23 +61,26 @@
 
     // =========================================
     // Filtrage et affichage
+    // On attend que main.js ait fini de charger games.json (événement jeuxPrets)
     // =========================================
-    const catGrid = document.getElementById('games-grid');
-    const noResults = document.getElementById('no-results');
-    const countEl = document.getElementById('cat-count');
+    document.addEventListener('jeuxPrets', () => {
+      const catGrid = document.getElementById('games-grid');
+      const noResults = document.getElementById('no-results');
+      const countEl = document.getElementById('cat-count');
 
-    const resultats = categorie
-      ? jeux.filter(j => j.categorie.toLowerCase() === categorie.toLowerCase())
-      : jeux;
+      const resultats = categorie
+        ? jeux.filter(j => j.categorie.toLowerCase() === categorie.toLowerCase())
+        : jeux;
 
-    countEl.textContent = `${resultats.length} jeu${resultats.length > 1 ? 'x' : ''} trouvé${resultats.length > 1 ? 's' : ''}`;
+      countEl.textContent = `${resultats.length} jeu${resultats.length > 1 ? 'x' : ''} trouvé${resultats.length > 1 ? 's' : ''}`;
 
-    if (resultats.length === 0) {
-      catGrid.style.display = 'none';
-      noResults.style.display = 'block';
-    } else {
-      resultats.forEach(jeu => catGrid.appendChild(createCard(jeu)));
-    }
+      if (resultats.length === 0) {
+        catGrid.style.display = 'none';
+        noResults.style.display = 'block';
+      } else {
+        resultats.forEach(jeu => catGrid.appendChild(createCard(jeu)));
+      }
+    });
   </script>
 
 </body>

@@ -1,20 +1,34 @@
 // =========================================
-// Données des jeux (vrais Game IDs GameDistribution)
-// ⚠️ Remplace "nom" par le vrai titre de chaque jeu (visible sur ton dashboard GD)
-//    et "categorie" par la bonne catégorie. width/height = dimensions recommandées par GD.
+// Données des jeux : chargées depuis games.json (source unique)
+// Pour ajouter un jeu : modifie UNIQUEMENT games.json, rien d'autre.
 // =========================================
-const jeux = [
-  { id: "5d8d11e9919245939a57378a02b8fc8b", nom: "Jeu 1 (à renommer)", categorie: "Action",   image: "", emoji: "🎮", width: 800,  height: 600 },
-  { id: "42bfa359db1e405f8cc84b181c206f7c", nom: "Jeu 2 (à renommer)", categorie: "Puzzle",   image: "", emoji: "🎮", width: 800,  height: 600 },
-  { id: "b9ad7cca160e4be386d5f62da00ada7e", nom: "Jeu 3 (à renommer)", categorie: "Action",   image: "", emoji: "🎮", width: 800,  height: 600 },
-  { id: "63dd731e83704e13b300deff8109f39a", nom: "Jeu 4 (à renommer)", categorie: "Aventure", image: "", emoji: "🎮", width: 1200, height: 1600 },
-  { id: "381bb01b67a14e7ea30b5623eb36855e", nom: "Jeu 5 (à renommer)", categorie: "Course",   image: "", emoji: "🎮", width: 1280, height: 720 },
-  { id: "665328d407a547f2a003ed3723dedf16", nom: "Jeu 6 (à renommer)", categorie: "Puzzle",   image: "", emoji: "🎮", width: 480,  height: 800 },
-  { id: "c4853541e0434d19a5bfdd8c75887cb5", nom: "Jeu 7 (à renommer)", categorie: "Puzzle",   image: "", emoji: "🎮", width: 450,  height: 800 },
-  { id: "a9964948ad434acfb106811d323e6464", nom: "Jeu 8 (à renommer)", categorie: "Sport",    image: "", emoji: "🎮", width: 800,  height: 600 },
-  { id: "b4ddb7628afc4a6fbd87b775ccf6f45e", nom: "Jeu 9 (à renommer)", categorie: "Course",   image: "", emoji: "🎮", width: 1280, height: 720 },
-  { id: "88d7078602364cfd845f7c2796c456c7", nom: "Jeu 10 (à renommer)", categorie: "Sport",   image: "", emoji: "🎮", width: 800,  height: 600 }
-];
+let jeux = []; // rempli après le fetch, avant ça reste vide
+
+// GameDistribution fournit une thumbnail prévisible à partir du gameId
+function getThumbnailUrl(gameId) {
+  return `https://img.gamedistribution.com/${gameId}-512x512.jpeg`;
+}
+
+async function chargerJeux() {
+  try {
+    const reponse = await fetch('games.json');
+    if (!reponse.ok) throw new Error('games.json introuvable');
+    const data = await reponse.json();
+    // On normalise chaque jeu : image = thumbnail GD, emoji = fallback si l'image casse
+    jeux = data.map(j => ({
+      id: j.id,
+      nom: j.nom,
+      categorie: j.categorie,
+      image: getThumbnailUrl(j.id),
+      emoji: j.emoji || "🎮",
+      width: j.width || 800,
+      height: j.height || 600
+    }));
+  } catch (err) {
+    console.error('Erreur de chargement de games.json :', err);
+    jeux = [];
+  }
+}
 
 const grid = document.getElementById('games-grid');
 const favorisSection = document.getElementById('favoris-section');
@@ -76,7 +90,11 @@ function createCard(jeu) {
     img.src = jeu.image;
     img.alt = jeu.nom;
     img.loading = 'lazy';
-    thumb.replaceWith(img);
+    // Si la thumbnail GameDistribution ne charge pas, on bascule sur l'emoji
+    img.onerror = function () {
+      this.replaceWith(thumb);
+      thumb.textContent = jeu.emoji || '🎮';
+    };
     link.appendChild(img);
   } else {
     thumb.textContent = jeu.emoji || '🎮';
@@ -216,10 +234,17 @@ if (backToTop) {
 
 // =========================================
 // Initialisation
-// Uniquement sur l'accueil (categorie.html gère son propre rendu après ce script)
+// On charge d'abord games.json, puis on rend les cartes.
+// Sur categorie.html, on dispatch un événement pour que son propre script
+// sache quand "jeux" est prêt à être filtré.
 // =========================================
 const isAccueil = document.getElementById('favoris-section') !== null;
-if (grid && isAccueil) {
-  generateCards(jeux);
-  renderAll();
-}
+
+chargerJeux().then(() => {
+  if (grid && isAccueil) {
+    generateCards(jeux);
+    renderAll();
+  }
+  // Prévient les autres scripts (ex: categorie.html) que les jeux sont chargés
+  document.dispatchEvent(new CustomEvent('jeuxPrets'));
+});
