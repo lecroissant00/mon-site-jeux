@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Over — Page introuvable | CroissantGames</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .game-over-box {
+      max-width: 600px;
+      margin: 4rem auto;
+      text-align: center;
+      padding: 2rem;
+    }
+    .game-over-box h1 {
+      font-size: 2.5rem;
+      color: #1a1a2e;
+      letter-spacing: 2px;
+      animation: blink 1.2s infinite;
+    }
+    .game-over-box .score {
+      font-size: 1.1rem;
+      color: #a78bfa;
+      font-weight: 700;
+      margin: 1rem 0;
+    }
+    .game-over-box p {
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .continue-btn {
+      display: inline-block;
+      background: #a78bfa;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .continue-btn:hover { background: #8f6fe0; }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo"><a href="index.html">Croissant<span>Games</span></a></div>
+    <nav class="main-nav">
+      <a href="categorie.html?cat=Action">Action</a>
+      <a href="categorie.html?cat=Puzzle">Puzzle</a>
+      <a href="categorie.html?cat=Course">Course</a>
+      <a href="categorie.html?cat=Sport">Sport</a>
+      <a href="categorie.html?cat=Aventure">Aventure</a>
+    </nav>
+  </header>
+
+  <main class="game-over-box">
+    <h1>🎮 GAME OVER</h1>
+    <div class="score">404 points perdus</div>
+    <p>Cette page n'existe pas, ou a été déplacée vers un autre niveau.</p>
+    <a href="index.html" class="continue-btn">▶ Continuer</a>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 CroissantGames — Tous droits réservés</p>
+    <a href="mentions-legales.html">Mentions légales</a>
+  </footer>
+
+</body>
+</html>

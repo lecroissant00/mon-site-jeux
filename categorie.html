@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title id="page-title">Catégorie — CroissantGames</title>
+  <meta id="meta-description" name="description" content="Découvre les jeux par catégorie sur CroissantGames.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo"><a href="index.html">Croissant<span>Games</span></a></div>
+    <nav class="main-nav">
+      <a href="categorie.html?cat=Action">Action</a>
+      <a href="categorie.html?cat=Puzzle">Puzzle</a>
+      <a href="categorie.html?cat=Course">Course</a>
+      <a href="categorie.html?cat=Sport">Sport</a>
+      <a href="categorie.html?cat=Aventure">Aventure</a>
+    </nav>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Chercher un jeu...">
+    </div>
+  </header>
+
+  <main class="games-section" style="max-width:1200px; margin:0 auto; padding:1.5rem;">
+    <h1 id="cat-title">Jeux</h1>
+    <p id="cat-count" style="color:#888; font-size:0.9rem; margin-bottom:1rem;"></p>
+
+    <div class="games-grid" id="games-grid"></div>
+
+    <p id="no-results" style="color:#888; display:none;">
+      Aucun jeu trouvé dans cette catégorie. <a href="index.html" style="color:#a78bfa;">Retour à l'accueil</a>
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 CroissantGames — Tous droits réservés</p>
+    <a href="mentions-legales.html">Mentions légales</a>
+  </footer>
+
+  <button id="back-to-top" aria-label="Retour en haut">↑</button>
+
+  <!-- On réutilise le tableau de jeux et les fonctions de main.js -->
+  <script src="js/main.js"></script>
+
+  <script>
+    // =========================================
+    // Lecture de la catégorie depuis l'URL
+    // =========================================
+    const catParams = new URLSearchParams(window.location.search);
+    const categorie = catParams.get('cat') || '';
+
+    document.getElementById('cat-title').textContent = categorie ? `Jeux ${categorie}` : 'Tous les jeux';
+    document.getElementById('page-title').textContent = (categorie ? `Jeux ${categorie}` : 'Catégorie') + ' — CroissantGames';
+    document.getElementById('meta-description').setAttribute(
+      'content',
+      `Découvre tous les jeux ${categorie} gratuits en ligne sur CroissantGames.`
+    );
+
+    // =========================================
+    // Filtrage et affichage
+    // =========================================
+    const grid = document.getElementById('games-grid');
+    const noResults = document.getElementById('no-results');
+    const countEl = document.getElementById('cat-count');
+
+    const resultats = categorie
+      ? jeux.filter(j => j.categorie.toLowerCase() === categorie.toLowerCase())
+      : jeux;
+
+    countEl.textContent = `${resultats.length} jeu${resultats.length > 1 ? 'x' : ''} trouvé${resultats.length > 1 ? 's' : ''}`;
+
+    if (resultats.length === 0) {
+      grid.style.display = 'none';
+      noResults.style.display = 'block';
+    } else {
+      resultats.forEach(jeu => grid.appendChild(createCard(jeu)));
+    }
+  </script>
+
+</body>
+</html>

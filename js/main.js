@@ -216,8 +216,10 @@ if (backToTop) {
 
 // =========================================
 // Initialisation
+// Uniquement sur l'accueil (categorie.html gère son propre rendu après ce script)
 // =========================================
-if (grid) {
+const isAccueil = document.getElementById('favoris-section') !== null;
+if (grid && isAccueil) {
   generateCards(jeux);
   renderAll();
 }
