@@ -158,6 +158,11 @@ a { text-decoration: none; color: inherit; }
   margin: 1rem auto;
   width: 100%;
   overflow: hidden;
+  position: relative;
+}
+.ad-banner ins.adsbygoogle {
+  max-width: 100%;
+  max-height: 100%;
 }
 /* Bannière horizontale : pleine largeur jusqu'à 728px, hauteur proportionnelle */
 .ad-728x90 {
@@ -197,39 +202,48 @@ a { text-decoration: none; color: inherit; }
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-auto-rows: 160px;
+  align-items: start;
   gap: 1rem;
 }
 
-/* Tuile large dans la grille standard : occupe 2 colonnes, rendu image+overlay */
-.games-grid .game-card.featured-wide {
-  grid-column: span 2;
-  height: 160px;
+/* Carte normale : laisse son contenu (image + texte) dépasser la ligne de grille
+   sans être étirée ni coupée, grâce à align-items: start sur le parent. */
+.games-grid .game-card:not(.featured-big) {
+  align-self: start;
 }
-.games-grid .game-card.featured-wide a {
+
+/* Grande tuile dans la grille standard : occupe 2 colonnes x 2 lignes, rendu image+overlay */
+.games-grid .game-card.featured-big {
+  grid-column: span 2;
+  grid-row: span 2;
+  height: 100%;
+}
+.games-grid .game-card.featured-big a {
   position: relative;
   height: 100%;
 }
-.games-grid .game-card.featured-wide img,
-.games-grid .game-card.featured-wide .card-thumb {
+.games-grid .game-card.featured-big img,
+.games-grid .game-card.featured-big .card-thumb {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   aspect-ratio: auto !important;
 }
-.games-grid .game-card.featured-wide .game-info {
+.games-grid .game-card.featured-big .game-info {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem 0.7rem 0.5rem;
+  padding: 1.1rem 0.8rem 0.6rem;
   background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
 }
-.games-grid .game-card.featured-wide .game-info h3 {
+.games-grid .game-card.featured-big .game-info h3 {
   color: #fff !important;
-  font-size: 0.95rem !important;
+  font-size: 1.05rem !important;
 }
-.games-grid .game-card.featured-wide .game-info span {
+.games-grid .game-card.featured-big .game-info span {
   color: rgba(255,255,255,0.85) !important;
 }
 
@@ -237,9 +251,9 @@ a { text-decoration: none; color: inherit; }
   .games-section { padding: 1rem; }
   .games-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-auto-rows: 120px;
     gap: 0.7rem;
   }
-  .games-grid .game-card.featured-wide { height: 130px; }
 }
 
 /* ===== Layout "À la une" : grille + pub verticale à droite ===== */
@@ -252,6 +266,12 @@ a { text-decoration: none; color: inherit; }
   flex-shrink: 0;
   width: 300px;
   min-height: 600px;
+  max-width: 300px;
+  overflow: hidden;
+}
+.featured-side-ad ins {
+  max-width: 300px !important;
+  max-height: 600px !important;
 }
 @media (max-width: 1100px) {
   .featured-side-ad { display: none; }

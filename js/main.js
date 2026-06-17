@@ -263,7 +263,7 @@ function renderSkeletons(container, count = 8) {
 
 // =========================================
 // Génération de la grille principale (avec skeleton puis vraies cartes)
-// Insère une tuile "wide" (2 colonnes) toutes les 7 cartes pour casser la
+// Insère une grande tuile (2x2) toutes les 7 cartes pour casser la
 // monotonie visuelle, façon Poki — uniquement sur la grille principale.
 // =========================================
 function generateCards(liste) {
@@ -275,7 +275,7 @@ function generateCards(liste) {
       return;
     }
     liste.forEach((jeu, index) => {
-      const taille = (index > 0 && index % 7 === 0) ? 'wide' : 'normal';
+      const taille = (index > 0 && index % 7 === 0) ? 'big' : 'normal';
       grid.appendChild(createCard(jeu, taille));
     });
   }, 300);
