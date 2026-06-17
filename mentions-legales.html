@@ -11,16 +11,16 @@
       max-width: 720px;
       margin: 2rem auto;
       padding: 0 1.5rem 3rem;
-      color: #333;
+      color: var(--text-primary);
       line-height: 1.6;
     }
     .legal-content h1 {
-      color: #1a1a2e;
+      color: var(--text-heading);
       font-size: 1.6rem;
       margin-bottom: 1.5rem;
     }
     .legal-content h2 {
-      color: #1a1a2e;
+      color: var(--text-heading);
       font-size: 1.1rem;
       margin: 1.8rem 0 0.6rem;
     }
@@ -29,9 +29,9 @@
     .legal-content a { color: #a78bfa; }
     .legal-content .updated {
       font-size: 0.8rem;
-      color: #888;
+      color: var(--text-muted);
       margin-top: 2rem;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid var(--border-color);
       padding-top: 1rem;
     }
   </style>
@@ -49,6 +49,9 @@
         <div class="genre-menu" id="genre-menu"></div>
       </div>
     </nav>
+    <button id="random-game-btn" class="random-btn" type="button">🎲 Jeu au hasard</button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Changer de thème">🌙</button>
+
     <div class="search-bar">
       <input type="text" id="search-input" placeholder="Chercher un jeu...">
     </div>

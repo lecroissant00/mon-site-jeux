@@ -77,7 +77,7 @@
 
     #status-msg {
       font-size: 0.85rem;
-      color: #888;
+      color: var(--text-muted);
       margin-bottom: 0.5rem;
     }
 
@@ -101,7 +101,42 @@
     #play-counter {
       margin-top: 0.6rem;
       font-size: 0.8rem;
-      color: #888;
+      color: var(--text-muted);
+    }
+
+    .rating-widget, .share-widget {
+      margin-top: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .rating-label { color: var(--text-muted); }
+    .rating-stars { font-size: 1.3rem; color: #faa627; }
+    .star-pick { cursor: pointer; transition: transform 0.1s; }
+    .star-pick:hover { transform: scale(1.15); }
+
+    .share-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-heading);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .share-btn:hover { background: var(--bg-secondary); }
+    #share-twitter, #share-facebook, #share-whatsapp {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
     }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5808527177460754" crossorigin="anonymous"></script>
@@ -119,6 +154,9 @@
         <div class="genre-menu" id="genre-menu"></div>
       </div>
     </nav>
+    <button id="random-game-btn" class="random-btn" type="button">🎲 Jeu au hasard</button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Changer de thème">🌙</button>
+
     <div class="search-bar">
       <input type="text" id="search-input" placeholder="Chercher un jeu...">
     </div>
@@ -156,6 +194,19 @@
       </div>
 
       <div id="play-counter"></div>
+
+      <div class="rating-widget" id="rating-widget">
+        <span class="rating-label">Note ce jeu :</span>
+        <span class="rating-stars" id="rating-stars"></span>
+      </div>
+
+      <div class="share-widget">
+        <span class="rating-label">Partager :</span>
+        <button class="share-btn" id="share-twitter" type="button" aria-label="Partager sur X">𝕏</button>
+        <button class="share-btn" id="share-facebook" type="button" aria-label="Partager sur Facebook">f</button>
+        <button class="share-btn" id="share-whatsapp" type="button" aria-label="Partager sur WhatsApp">💬</button>
+        <button class="share-btn" id="share-btn" type="button">🔗 Copier le lien</button>
+      </div>
     </div>
 
     <!-- Pub droite -->
@@ -243,6 +294,72 @@
     }
     const playCount = incrementPlayCounter(gameId);
     document.getElementById('play-counter').textContent = `Tu as joué ${playCount} fois à ce jeu`;
+
+    // =========================================
+    // Notation par étoiles (localStorage, propre à ce visiteur)
+    // =========================================
+    function getNoteActuelle() {
+      return parseInt(localStorage.getItem(`note_${gameId}`) || '0', 10);
+    }
+    function afficherEtoiles() {
+      const note = getNoteActuelle();
+      const starsEl = document.getElementById('rating-stars');
+      starsEl.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.textContent = i <= note ? '★' : '☆';
+        star.className = 'star-pick';
+        star.setAttribute('role', 'button');
+        star.setAttribute('aria-label', `Donner ${i} étoile${i > 1 ? 's' : ''}`);
+        star.addEventListener('click', () => {
+          localStorage.setItem(`note_${gameId}`, i);
+          afficherEtoiles();
+        });
+        starsEl.appendChild(star);
+      }
+    }
+    if (gameId) afficherEtoiles();
+
+    // =========================================
+    // Boutons de partage social — ouvrent la fenêtre de partage classique de chaque réseau
+    // =========================================
+    const partageTexte = encodeURIComponent(`Viens jouer à ${gameName} sur CroissantGames !`);
+    const partageUrl = encodeURIComponent(pageUrl);
+
+    const twitterBtn = document.getElementById('share-twitter');
+    if (twitterBtn) {
+      twitterBtn.addEventListener('click', () => {
+        window.open(`https://twitter.com/intent/tweet?text=${partageTexte}&url=${partageUrl}`, '_blank', 'width=550,height=420');
+      });
+    }
+
+    const facebookBtn = document.getElementById('share-facebook');
+    if (facebookBtn) {
+      facebookBtn.addEventListener('click', () => {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${partageUrl}`, '_blank', 'width=550,height=420');
+      });
+    }
+
+    const whatsappBtn = document.getElementById('share-whatsapp');
+    if (whatsappBtn) {
+      whatsappBtn.addEventListener('click', () => {
+        window.open(`https://wa.me/?text=${partageTexte}%20${partageUrl}`, '_blank');
+      });
+    }
+
+    // =========================================
+    // Bouton de partage — copie le lien de la page dans le presse-papier
+    // =========================================
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(pageUrl).then(() => {
+          const original = shareBtn.textContent;
+          shareBtn.textContent = '✓ Lien copié !';
+          setTimeout(() => { shareBtn.textContent = original; }, 1800);
+        });
+      });
+    }
 
     // =========================================
     // Chargement de l'iframe GameDistribution

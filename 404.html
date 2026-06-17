@@ -14,7 +14,7 @@
     }
     .game-over-box h1 {
       font-size: 2.5rem;
-      color: #1a1a2e;
+      color: var(--text-heading);
       letter-spacing: 2px;
       animation: blink 1.2s infinite;
     }
@@ -25,7 +25,7 @@
       margin: 1rem 0;
     }
     .game-over-box p {
-      color: #666;
+      color: var(--text-muted);
       margin-bottom: 1.5rem;
     }
     .continue-btn {
@@ -57,6 +57,7 @@
         <div class="genre-menu" id="genre-menu"></div>
       </div>
     </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Changer de thème">🌙</button>
   </header>
 
   <main class="game-over-box">

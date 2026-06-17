@@ -49,6 +49,9 @@
       </div>
     </nav>
 
+    <button id="random-game-btn" class="random-btn" type="button">🎲 Jeu au hasard</button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Changer de thème">🌙</button>
+
     <div class="search-bar">
       <input type="text" id="search-input" placeholder="Chercher un jeu...">
     </div>
@@ -65,6 +68,12 @@
   </div>
 
   <main>
+
+    <!-- À la une (jeux les plus populaires) -->
+    <section id="alaune-section" class="games-section featured-section" hidden>
+      <h2>🔥 À la une</h2>
+      <div class="games-grid" id="alaune-grid"></div>
+    </section>
 
     <!-- Favoris -->
     <section id="favoris-section" class="games-section" hidden>
