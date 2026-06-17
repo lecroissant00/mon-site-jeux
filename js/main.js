@@ -165,27 +165,32 @@ function setNote(gameId, note) {
 
 // =========================================
 // Création d'une carte de jeu (DOM element)
+// isBig = true → carte "À la une" en grand format (image pleine, titre en overlay, style Poki)
 // =========================================
-function createCard(jeu) {
+function createCard(jeu, isBig = false) {
   const favs = getFavoris();
   const isFav = favs.includes(jeu.id);
 
   const card = document.createElement('div');
-  card.className = 'game-card';
+  card.className = 'game-card' + (isBig ? ' featured-big' : '');
 
   const link = document.createElement('a');
   link.href = `jeu.html?id=${encodeURIComponent(jeu.id)}&nom=${encodeURIComponent(jeu.nom)}&w=${jeu.width || 800}&h=${jeu.height || 600}`;
   link.style.display = 'block';
+  link.style.height = '100%';
 
   // Vignette : image réelle si fournie, sinon emoji en placeholder
   const thumb = document.createElement('div');
-  thumb.style.width = '100%';
-  thumb.style.aspectRatio = '1';
+  thumb.className = 'card-thumb';
   thumb.style.display = 'flex';
   thumb.style.alignItems = 'center';
   thumb.style.justifyContent = 'center';
-  thumb.style.fontSize = '2.5rem';
-  thumb.style.background = '#eee';
+  thumb.style.fontSize = isBig ? '4rem' : '2.5rem';
+  thumb.style.background = 'var(--bg-secondary)';
+  if (!isBig) {
+    thumb.style.width = '100%';
+    thumb.style.aspectRatio = '1';
+  }
 
   if (jeu.image) {
     const img = document.createElement('img');
@@ -377,14 +382,16 @@ function initRandomButton() {
 }
 
 // =========================================
-// Section "À la une" — met en avant les 4 jeux les plus populaires
+// Section "À la une" — met en avant les jeux les plus populaires.
+// Le jeu n°1 (le plus joué) est affiché en grand format façon Poki,
+// les suivants en format normal autour.
 // =========================================
 function renderAlaUne() {
   const section = document.getElementById('alaune-section');
   const alaUneGrid = document.getElementById('alaune-grid');
   if (!section || !alaUneGrid) return;
 
-  const top = trierParPopularite(jeux).slice(0, 4);
+  const top = trierParPopularite(jeux).slice(0, 6);
   // N'affiche la section que si au moins un jeu a déjà été joué (sinon le tri n'a pas de sens)
   const aDejaDesStats = top.some(j => getPlayCount(j.id) > 0);
 
@@ -395,7 +402,11 @@ function renderAlaUne() {
 
   section.hidden = false;
   alaUneGrid.innerHTML = '';
-  top.forEach(jeu => alaUneGrid.appendChild(createCard(jeu)));
+  alaUneGrid.className = 'games-grid featured-grid';
+
+  top.forEach((jeu, index) => {
+    alaUneGrid.appendChild(createCard(jeu, index === 0));
+  });
 }
 
 // =========================================
