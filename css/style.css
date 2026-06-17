@@ -199,52 +199,61 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ===== Grille ===== */
+/* Toutes les cartes (normales et grandes) remplissent leur cellule avec l'image
+   en plein fond et le titre en overlay — style uniforme façon Poki, plus de
+   bug d'empilement lié au mélange hauteur fixe / hauteur flexible. */
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   grid-auto-rows: 160px;
-  align-items: start;
   gap: 1rem;
 }
 
-/* Carte normale : laisse son contenu (image + texte) dépasser la ligne de grille
-   sans être étirée ni coupée, grâce à align-items: start sur le parent. */
-.games-grid .game-card:not(.featured-big) {
-  align-self: start;
-}
-
-/* Grande tuile dans la grille standard : occupe 2 colonnes x 2 lignes, rendu image+overlay */
-.games-grid .game-card.featured-big {
-  grid-column: span 2;
-  grid-row: span 2;
+.games-grid .game-card {
   height: 100%;
 }
-.games-grid .game-card.featured-big a {
+.games-grid .game-card a {
   position: relative;
   height: 100%;
 }
-.games-grid .game-card.featured-big img,
-.games-grid .game-card.featured-big .card-thumb {
+.games-grid .game-card img,
+.games-grid .game-card .card-thumb {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   aspect-ratio: auto !important;
 }
-.games-grid .game-card.featured-big .game-info {
+.games-grid .game-card .game-info {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1.1rem 0.8rem 0.6rem;
+  padding: 1rem 0.7rem 0.5rem;
   background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
 }
-.games-grid .game-card.featured-big .game-info h3 {
+.games-grid .game-card .game-info h3 {
   color: #fff !important;
+  font-size: 0.85rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.games-grid .game-card .game-info span {
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 0.72rem !important;
+}
+
+/* Grande tuile : occupe 2 colonnes x 2 lignes */
+.games-grid .game-card.featured-big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.games-grid .game-card.featured-big .game-info h3 {
   font-size: 1.05rem !important;
 }
 .games-grid .game-card.featured-big .game-info span {
-  color: rgba(255,255,255,0.85) !important;
+  font-size: 0.82rem !important;
 }
 
 @media (max-width: 480px) {
