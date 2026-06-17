@@ -57,7 +57,13 @@ function buildGenreMenu() {
     menu.appendChild(a);
   });
 
+  // Évite d'attacher plusieurs fois le même listener si buildGenreMenu()
+  // est appelée plus d'une fois sur la même page.
+  if (toggle.dataset.bound === 'true') return;
+  toggle.dataset.bound = 'true';
+
   toggle.addEventListener('click', (e) => {
+    e.preventDefault();
     e.stopPropagation();
     const isOpen = menu.classList.toggle('open');
     toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
