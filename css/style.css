@@ -265,11 +265,12 @@ a { text-decoration: none; color: inherit; }
   }
 }
 
-/* ===== Layout "À la une" : grille + pub verticale à droite ===== */
+/* ===== Layout "À la une" : grille + pub verticale à droite, complètement hors du cadre sombre ===== */
 .featured-layout {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  margin: 1.5rem;
 }
 .featured-side-ad {
   flex-shrink: 0;
@@ -446,8 +447,9 @@ a { text-decoration: none; color: inherit; }
 .featured-section {
   background: var(--bg-card);
   border-radius: 14px;
-  margin: 1.5rem;
   padding: 1.2rem 1.2rem 1.5rem;
+  flex: 1;
+  min-width: 0;
 }
 .featured-section h2 { color: var(--text-heading); }
 

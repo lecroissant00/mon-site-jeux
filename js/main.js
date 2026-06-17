@@ -395,6 +395,7 @@ function initRandomButton() {
 function renderAlaUne() {
   const section = document.getElementById('alaune-section');
   const alaUneGrid = document.getElementById('alaune-grid');
+  const sideAd = document.querySelector('.featured-side-ad');
   if (!section || !alaUneGrid) return;
 
   const top = trierParPopularite(jeux).slice(0, 8);
@@ -403,10 +404,12 @@ function renderAlaUne() {
 
   if (!aDejaDesStats || top.length === 0) {
     section.hidden = true;
+    if (sideAd) sideAd.hidden = true;
     return;
   }
 
   section.hidden = false;
+  if (sideAd) sideAd.hidden = false;
   alaUneGrid.innerHTML = '';
   alaUneGrid.className = 'games-grid featured-grid';
 
