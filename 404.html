@@ -50,11 +50,12 @@
   <header class="site-header">
     <div class="logo"><a href="index.html">Croissant<span>Games</span></a></div>
     <nav class="main-nav">
-      <a href="categorie.html?cat=Action">Action</a>
-      <a href="categorie.html?cat=Puzzle">Puzzle</a>
-      <a href="categorie.html?cat=Course">Course</a>
-      <a href="categorie.html?cat=Sport">Sport</a>
-      <a href="categorie.html?cat=Aventure">Aventure</a>
+      <div class="genre-dropdown" id="genre-dropdown">
+        <button class="genre-toggle" id="genre-toggle" aria-haspopup="true" aria-expanded="false">
+          Genres ▾
+        </button>
+        <div class="genre-menu" id="genre-menu"></div>
+      </div>
     </nav>
   </header>
 
@@ -70,6 +71,7 @@
     <a href="mentions-legales.html">Mentions légales</a>
   </footer>
 
+  <script src="js/main.js"></script>
   <script src="js/cookie-banner.js"></script>
 
 </body>

@@ -34,6 +34,43 @@ const recentsGrid = document.getElementById('recents-grid');
 const searchInput = document.getElementById('search-input');
 
 // =========================================
+// Menu déroulant des genres — construit dynamiquement depuis games.json.
+// Ajoute un nouveau genre dans games.json et il apparaît automatiquement ici,
+// triés par ordre alphabétique, sans rien modifier dans le HTML/CSS.
+// =========================================
+function buildGenreMenu() {
+  const menu = document.getElementById('genre-menu');
+  const toggle = document.getElementById('genre-toggle');
+  if (!menu || !toggle) return;
+
+  const genresUniques = [...new Set(jeux.map(j => j.categorie))].sort((a, b) =>
+    a.localeCompare(b, 'fr')
+  );
+
+  menu.innerHTML = '';
+  menu.style.gridTemplateColumns = genresUniques.length > 6 ? '1fr 1fr' : '1fr';
+
+  genresUniques.forEach(genre => {
+    const a = document.createElement('a');
+    a.href = `categorie.html?cat=${encodeURIComponent(genre)}`;
+    a.textContent = genre;
+    menu.appendChild(a);
+  });
+
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = menu.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // Ferme le menu si on clique ailleurs sur la page
+  document.addEventListener('click', () => {
+    menu.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  });
+}
+
+// =========================================
 // Favoris (localStorage)
 // =========================================
 function getFavoris() {
@@ -246,12 +283,14 @@ if (backToTop) {
 // =========================================
 // Initialisation
 // On charge d'abord games.json, puis on rend les cartes.
+// Le menu des genres est construit sur TOUTES les pages (index, jeu, categorie...).
 // Sur categorie.html, on dispatch un événement pour que son propre script
 // sache quand "jeux" est prêt à être filtré.
 // =========================================
 const isAccueil = document.getElementById('favoris-section') !== null;
 
 chargerJeux().then(() => {
+  buildGenreMenu();
   if (grid && isAccueil) {
     generateCards(jeux);
     renderAll();

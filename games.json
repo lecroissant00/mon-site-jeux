@@ -20,5 +20,10 @@
   { "id": "GAME_ID_ICI", "nom": "Helix Jump", "categorie": "Action", "width": 480, "height": 800, "image": "" },
   { "id": "GAME_ID_ICI", "nom": "Jewel Blast", "categorie": "Puzzle", "width": 800, "height": 600, "image": "" },
   { "id": "GAME_ID_ICI", "nom": "Subway Surf", "categorie": "Course", "width": 800, "height": 600, "image": "" },
-  { "id": "GAME_ID_ICI", "nom": "Crossy Road", "categorie": "Aventure", "width": 800, "height": 600, "image": "" }
+  { "id": "GAME_ID_ICI", "nom": "Crossy Road", "categorie": "Aventure", "width": 800, "height": 600, "image": "" },
+  { "id": "116e0e450a374f24877fa02ad98a2e62", "nom": "Football Rush 3D", "categorie": "Football", "width": 900, "height": 600, "image": "https://img.gamedistribution.com/116e0e450a374f24877fa02ad98a2e62-512x384.jpg" },
+  { "id": "1561f24d736b4bf292e0ae33059f909f", "nom": "Bubble Pop Legend", "categorie": "Bubble shooter", "width": 800, "height": 600, "image": "https://img.gamedistribution.com/1561f24d736b4bf292e0ae33059f909f-512x384.jpg" },
+  { "id": "13eabea86f7c4cd993a156258420e9ec", "nom": "Football Legends 2026", "categorie": "Football", "width": 800, "height": 480, "image": "https://img.gamedistribution.com/13eabea86f7c4cd993a156258420e9ec-512x384.jpg" },
+  { "id": "55e0e53f26824f0f8f689ac52f9009d7", "nom": "Puzzle Game (à renommer)", "categorie": "Puzzle", "width": 800, "height": 600, "image": "https://img.gamedistribution.com/55e0e53f26824f0f8f689ac52f9009d7-512x512.jpg" },
+  { "id": "ebe613bf6d5b44ad8908c7a36a710b7b", "nom": "Smash Defense", "categorie": "Battle", "width": 800, "height": 600, "image": "https://img.gamedistribution.com/ebe613bf6d5b44ad8908c7a36a710b7b-512x384.jpg" }
 ]
