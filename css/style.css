@@ -38,11 +38,7 @@ a { text-decoration: none; color: inherit; }
   gap: 1rem;
   flex: 1 1 auto;
   flex-wrap: wrap;
-  overflow-x: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
-.main-nav::-webkit-scrollbar { display: none; }
 .main-nav a {
   color: #ddd;
   font-size: 0.88rem;
