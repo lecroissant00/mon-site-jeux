@@ -413,11 +413,10 @@ function renderAlaUne() {
   alaUneGrid.innerHTML = '';
   alaUneGrid.className = 'games-grid featured-grid';
 
-  // Plan de tailles : index 0 = big, index 3 = wide, index 5 = tall, le reste normal
-  const plan = { 0: 'big', 3: 'wide', 5: 'tall' };
-
+  // Seule la première carte (la plus jouée) est en grand format (2x2),
+  // toutes les autres restent en format normal (1x1) — même logique que la grille standard.
   top.forEach((jeu, index) => {
-    alaUneGrid.appendChild(createCard(jeu, plan[index] || 'normal'));
+    alaUneGrid.appendChild(createCard(jeu, index === 0 ? 'big' : 'normal'));
   });
 }
 

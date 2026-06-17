@@ -336,18 +336,6 @@ a { text-decoration: none; color: inherit; }
 .featured-grid .game-card.featured-big .game-info h3 { font-size: 1.05rem !important; }
 .featured-grid .game-card.featured-big .game-info span { font-size: 0.82rem !important; }
 
-/* Tuile large : 2 colonnes x 1 ligne */
-.featured-grid .game-card.featured-wide {
-  grid-column: span 2;
-  grid-row: span 1;
-}
-
-/* Tuile haute : 1 colonne x 2 lignes */
-.featured-grid .game-card.featured-tall {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-
 @media (max-width: 700px) {
   .featured-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -356,14 +344,6 @@ a { text-decoration: none; color: inherit; }
   .featured-grid .game-card.featured-big {
     grid-column: span 2;
     grid-row: span 2;
-  }
-  .featured-grid .game-card.featured-wide {
-    grid-column: span 2;
-    grid-row: span 1;
-  }
-  .featured-grid .game-card.featured-tall {
-    grid-column: span 1;
-    grid-row: span 1;
   }
 }
 
