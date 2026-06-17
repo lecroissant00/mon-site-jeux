@@ -33,6 +33,7 @@
       setConsent('true');
       banner.remove();
       loadAdSenseIfConsented();
+      document.dispatchEvent(new CustomEvent('cookiesAccepted'));
     });
 
     document.getElementById('cookie-refuse').addEventListener('click', () => {
@@ -87,19 +88,22 @@
   }
 
   // =========================================
-  // Chargement conditionnel de Google AdSense
-  // N'appelle cette fonction QUE si le consentement est "true"
+  // Affichage effectif des annonces — appelé uniquement si consentement donné.
+  // Le script de vérification AdSense (adsbygoogle.js) est déjà chargé globalement
+  // dans le <head> de chaque page car Google l'exige pour valider la propriété du site.
+  // Ici on ne fait que déclencher l'affichage des blocs publicitaires une fois le
+  // consentement obtenu — pas de second chargement du script.
   // =========================================
   function loadAdSenseIfConsented() {
     if (getConsent() !== 'true') return;
-    if (document.getElementById('adsense-script')) return; // déjà chargé, évite les doublons
+    if (window.adsenseActivated) return; // déjà activé sur cette page
+    window.adsenseActivated = true;
 
-    const script = document.createElement('script');
-    script.id = 'adsense-script';
-    script.async = true;
-    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX'; // ⚠️ remplace par ton vrai ID client AdSense
-    script.crossOrigin = 'anonymous';
-    document.head.appendChild(script);
+    // Active chaque emplacement publicitaire <ins class="adsbygoogle"> présent sur la page.
+    // Tant que cette fonction n'est pas appelée, aucune annonce ne s'affiche réellement.
+    document.querySelectorAll('.adsbygoogle').forEach(() => {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    });
   }
 
   // =========================================
