@@ -86,21 +86,6 @@
     <!-- Emplacement Google AdSense 728x90 -->
   </div>
 
-  <!-- Newsletter -->
-  <section class="newsletter-section">
-    <h2>🎮 Ne rate aucun nouveau jeu !</h2>
-    <p>Reçois les meilleurs jeux de la semaine directement dans ta boîte mail</p>
-
-    <!-- ⚠️ Remplace ce formulaire par le code d'intégration Mailchimp une fois ton compte créé.
-         Mailchimp fournit un <form action="https://XXXX.list-manage.com/subscribe/post?u=...&id=..." method="post">
-         à coller ici, avec un champ input name="EMAIL" -->
-    <form id="newsletter-form" class="newsletter-form">
-      <input type="email" id="newsletter-email" placeholder="ton@email.com" required>
-      <button type="submit">Je m'inscris</button>
-    </form>
-    <p id="newsletter-confirm" class="newsletter-confirm" hidden>✓ Inscrit !</p>
-  </section>
-
   <footer class="site-footer">
     <p>&copy; 2026 CroissantGames — Tous droits réservés</p>
     <a href="mentions-legales.html">Mentions légales</a>
@@ -112,22 +97,5 @@
   <script src="js/cookie-banner.js"></script>
   <script src="js/analytics.js"></script>
 
-  <script>
-    // =========================================
-    // Newsletter — soumission du formulaire
-    // ⚠️ Remplace ce bloc par le script Mailchimp si tu utilises leur formulaire intégré.
-    // Pour l'instant : confirmation visuelle simple, sans envoi réel.
-    // =========================================
-    const newsletterForm = document.getElementById('newsletter-form');
-    if (newsletterForm) {
-      newsletterForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        // TODO : remplacer par un vrai appel à l'API Mailchimp une fois le compte créé
-        document.getElementById('newsletter-confirm').hidden = false;
-        newsletterForm.reset();
-        newsletterForm.hidden = true;
-      });
-    }
-  </script>
 </body>
 </html>

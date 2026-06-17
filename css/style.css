@@ -232,57 +232,6 @@ a { text-decoration: none; color: inherit; }
 }
 #back-to-top.visible { display: block; }
 
-/* ===== Newsletter ===== */
-.newsletter-section {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.newsletter-section h2 {
-  color: #1a1a2e;
-  font-size: 1.2rem;
-  margin-bottom: 0.4rem;
-}
-.newsletter-section p {
-  color: #888;
-  font-size: 0.88rem;
-  margin-bottom: 1rem;
-}
-.newsletter-form {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.newsletter-form input {
-  flex: 1 1 220px;
-  padding: 10px 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  outline: none;
-}
-.newsletter-form input:focus { border-color: #a78bfa; }
-.newsletter-form button {
-  background: #a78bfa;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-.newsletter-form button:hover { background: #8f6fe0; }
-.newsletter-confirm {
-  color: #4ade80;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
 
 /* ===== Footer ===== */
 .site-footer {
