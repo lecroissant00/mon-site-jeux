@@ -200,16 +200,66 @@ a { text-decoration: none; color: inherit; }
   gap: 1rem;
 }
 
+/* Tuile large dans la grille standard : occupe 2 colonnes, rendu image+overlay */
+.games-grid .game-card.featured-wide {
+  grid-column: span 2;
+  height: 160px;
+}
+.games-grid .game-card.featured-wide a {
+  position: relative;
+  height: 100%;
+}
+.games-grid .game-card.featured-wide img,
+.games-grid .game-card.featured-wide .card-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto !important;
+}
+.games-grid .game-card.featured-wide .game-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 0.7rem 0.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+}
+.games-grid .game-card.featured-wide .game-info h3 {
+  color: #fff !important;
+  font-size: 0.95rem !important;
+}
+.games-grid .game-card.featured-wide .game-info span {
+  color: rgba(255,255,255,0.85) !important;
+}
+
 @media (max-width: 480px) {
   .games-section { padding: 1rem; }
   .games-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 0.7rem;
   }
+  .games-grid .game-card.featured-wide { height: 130px; }
 }
 
-/* ===== Grille "À la une" — mosaïque type Poki (1 grande carte + petites cartes) ===== */
+/* ===== Layout "À la une" : grille + pub verticale à droite ===== */
+.featured-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.featured-side-ad {
+  flex-shrink: 0;
+  width: 300px;
+  min-height: 600px;
+}
+@media (max-width: 1100px) {
+  .featured-side-ad { display: none; }
+}
+
+/* ===== Grille "À la une" — mosaïque type Poki, tailles variées ===== */
 .featured-grid {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 160px;
@@ -245,12 +295,26 @@ a { text-decoration: none; color: inherit; }
 .featured-grid .game-card .game-info span {
   color: rgba(255,255,255,0.85) !important;
 }
+
+/* Grande tuile : 2 colonnes x 2 lignes */
 .featured-grid .game-card.featured-big {
   grid-column: span 2;
   grid-row: span 2;
 }
 .featured-grid .game-card.featured-big .game-info h3 { font-size: 1.05rem !important; }
 .featured-grid .game-card.featured-big .game-info span { font-size: 0.82rem !important; }
+
+/* Tuile large : 2 colonnes x 1 ligne */
+.featured-grid .game-card.featured-wide {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* Tuile haute : 1 colonne x 2 lignes */
+.featured-grid .game-card.featured-tall {
+  grid-column: span 1;
+  grid-row: span 2;
+}
 
 @media (max-width: 700px) {
   .featured-grid {
@@ -260,6 +324,14 @@ a { text-decoration: none; color: inherit; }
   .featured-grid .game-card.featured-big {
     grid-column: span 2;
     grid-row: span 2;
+  }
+  .featured-grid .game-card.featured-wide {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  .featured-grid .game-card.featured-tall {
+    grid-column: span 1;
+    grid-row: span 1;
   }
 }
 

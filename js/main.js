@@ -165,14 +165,15 @@ function setNote(gameId, note) {
 
 // =========================================
 // Création d'une carte de jeu (DOM element)
-// isBig = true → carte "À la une" en grand format (image pleine, titre en overlay, style Poki)
+// taille : "normal" (par défaut), "big" (2x2), "wide" (2x1), "tall" (1x2)
 // =========================================
-function createCard(jeu, isBig = false) {
+function createCard(jeu, taille = 'normal') {
   const favs = getFavoris();
   const isFav = favs.includes(jeu.id);
+  const isBig = taille !== 'normal'; // toute taille spéciale utilise le rendu plein-image + overlay
 
   const card = document.createElement('div');
-  card.className = 'game-card' + (isBig ? ' featured-big' : '');
+  card.className = 'game-card' + (taille !== 'normal' ? ` featured-${taille}` : '');
 
   const link = document.createElement('a');
   link.href = `jeu.html?id=${encodeURIComponent(jeu.id)}&nom=${encodeURIComponent(jeu.nom)}&w=${jeu.width || 800}&h=${jeu.height || 600}`;
@@ -262,6 +263,8 @@ function renderSkeletons(container, count = 8) {
 
 // =========================================
 // Génération de la grille principale (avec skeleton puis vraies cartes)
+// Insère une tuile "wide" (2 colonnes) toutes les 7 cartes pour casser la
+// monotonie visuelle, façon Poki — uniquement sur la grille principale.
 // =========================================
 function generateCards(liste) {
   renderSkeletons(grid);
@@ -271,7 +274,10 @@ function generateCards(liste) {
       grid.innerHTML = '<p style="color:#888;">Aucun jeu trouvé.</p>';
       return;
     }
-    liste.forEach(jeu => grid.appendChild(createCard(jeu)));
+    liste.forEach((jeu, index) => {
+      const taille = (index > 0 && index % 7 === 0) ? 'wide' : 'normal';
+      grid.appendChild(createCard(jeu, taille));
+    });
   }, 300);
 }
 
@@ -383,15 +389,15 @@ function initRandomButton() {
 
 // =========================================
 // Section "À la une" — met en avant les jeux les plus populaires.
-// Le jeu n°1 (le plus joué) est affiché en grand format façon Poki,
-// les suivants en format normal autour.
+// Mosaïque de tailles variées façon Poki : 1 grande (2x2), 1 large (2x1),
+// 1 haute (1x2), le reste en format normal.
 // =========================================
 function renderAlaUne() {
   const section = document.getElementById('alaune-section');
   const alaUneGrid = document.getElementById('alaune-grid');
   if (!section || !alaUneGrid) return;
 
-  const top = trierParPopularite(jeux).slice(0, 6);
+  const top = trierParPopularite(jeux).slice(0, 8);
   // N'affiche la section que si au moins un jeu a déjà été joué (sinon le tri n'a pas de sens)
   const aDejaDesStats = top.some(j => getPlayCount(j.id) > 0);
 
@@ -404,8 +410,11 @@ function renderAlaUne() {
   alaUneGrid.innerHTML = '';
   alaUneGrid.className = 'games-grid featured-grid';
 
+  // Plan de tailles : index 0 = big, index 3 = wide, index 5 = tall, le reste normal
+  const plan = { 0: 'big', 3: 'wide', 5: 'tall' };
+
   top.forEach((jeu, index) => {
-    alaUneGrid.appendChild(createCard(jeu, index === 0));
+    alaUneGrid.appendChild(createCard(jeu, plan[index] || 'normal'));
   });
 }
 
