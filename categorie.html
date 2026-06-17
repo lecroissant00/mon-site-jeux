@@ -59,6 +59,15 @@
       `Découvre tous les jeux ${categorie} gratuits en ligne sur CroissantGames.`
     );
 
+    // Track le filtre catégorie (script analytics.js chargé plus bas dans la page)
+    if (categorie) {
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof trackEvent === 'function') {
+          trackEvent('category_filter', { category_name: categorie });
+        }
+      });
+    }
+
     // =========================================
     // Filtrage et affichage
     // On attend que main.js ait fini de charger games.json (événement jeuxPrets)
@@ -84,6 +93,7 @@
   </script>
 
   <script src="js/cookie-banner.js"></script>
+  <script src="js/analytics.js"></script>
 
 </body>
 </html>

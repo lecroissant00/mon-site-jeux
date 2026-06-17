@@ -250,6 +250,13 @@
 
       const gdUrl = `https://html5.gamedistribution.com/${gameId}/?gd_sdk_referrer_url=${encodeURIComponent(pageUrl)}`;
       iframe.src = gdUrl;
+
+      // Track le lancement du jeu (analytics.js chargé plus bas dans la page)
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof trackEvent === 'function') {
+          trackEvent('game_start', { game_id: gameId, game_name: gameName });
+        }
+      });
     } else {
       statusMsg.textContent = '❌ Aucun jeu spécifié.';
     }
@@ -313,6 +320,7 @@
   <!-- SDK GameDistribution -->
   <script src="https://html5.gamedistribution.com/libs/gd/5.0.1/gd-loader.js"></script>
   <script src="js/cookie-banner.js"></script>
+  <script src="js/analytics.js"></script>
 
 </body>
 </html>

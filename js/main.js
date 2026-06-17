@@ -41,12 +41,16 @@ function getFavoris() {
 }
 function toggleFavori(gameId) {
   let favs = getFavoris();
+  const estAjout = !favs.includes(gameId);
   if (favs.includes(gameId)) {
     favs = favs.filter(id => id !== gameId);
   } else {
     favs.push(gameId);
   }
   localStorage.setItem('favoris', JSON.stringify(favs));
+  if (estAjout && typeof trackEvent === 'function') {
+    trackEvent('game_favorite', { game_id: gameId });
+  }
   renderAll();
 }
 
@@ -195,6 +199,8 @@ function filtrerParCategorie(cat) {
 // Recherche en temps réel
 // =========================================
 if (searchInput) {
+  let searchTrackTimeout = null;
+
   searchInput.addEventListener('input', (e) => {
     const terme = e.target.value.trim().toLowerCase();
     if (terme === '') {
@@ -205,9 +211,18 @@ if (searchInput) {
     grid.innerHTML = '';
     if (resultats.length === 0) {
       grid.innerHTML = '<p style="color:#888;">Aucun résultat pour cette recherche.</p>';
-      return;
+    } else {
+      resultats.forEach(jeu => grid.appendChild(createCard(jeu)));
     }
-    resultats.forEach(jeu => grid.appendChild(createCard(jeu)));
+
+    // Track la recherche seulement après une pause de frappe (800ms),
+    // pour éviter d'envoyer un event à chaque lettre tapée.
+    clearTimeout(searchTrackTimeout);
+    searchTrackTimeout = setTimeout(() => {
+      if (typeof trackEvent === 'function' && terme) {
+        trackEvent('search', { search_term: terme });
+      }
+    }, 800);
   });
 }
 
