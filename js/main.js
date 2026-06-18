@@ -62,11 +62,26 @@ const recentsGrid = document.getElementById('recents-grid');
 const searchInput = document.getElementById('search-input');
 
 // =========================================
-// Popularité — basée sur le compteur de parties stocké par jeu.html
-// dans localStorage sous la clé "plays_{gameId}"
+// Statistiques globales (Supabase) — partagées entre TOUS les visiteurs.
+// Chargées une fois au démarrage de la page dans statsGlobales,
+// puis utilisées pour le tri par popularité et l'affichage des notes moyennes.
 // =========================================
+let statsGlobales = {};
+
 function getPlayCount(gameId) {
-  return parseInt(localStorage.getItem(`plays_${gameId}`) || '0', 10);
+  const stats = statsGlobales[gameId];
+  return stats ? stats.total_plays : 0;
+}
+
+function getNoteMoyenne(gameId) {
+  const stats = statsGlobales[gameId];
+  if (!stats || !stats.rating_count) return 0;
+  return stats.rating_sum / stats.rating_count;
+}
+
+function getNombreVotes(gameId) {
+  const stats = statsGlobales[gameId];
+  return stats ? stats.rating_count : 0;
 }
 
 function trierParPopularite(liste) {
@@ -154,16 +169,6 @@ function getRecents() {
 }
 
 // =========================================
-// Notation par étoiles (localStorage, propre à chaque visiteur)
-// =========================================
-function getNote(gameId) {
-  return parseInt(localStorage.getItem(`note_${gameId}`) || '0', 10);
-}
-function setNote(gameId, note) {
-  localStorage.setItem(`note_${gameId}`, note);
-}
-
-// =========================================
 // Création d'une carte de jeu (DOM element)
 // taille : "normal" (par défaut), "big" (2x2), "wide" (2x1), "tall" (1x2)
 // =========================================
@@ -221,12 +226,15 @@ function createCard(jeu, taille = 'normal') {
   info.className = 'game-info';
   info.innerHTML = `<h3>${jeu.nom}</h3><span>${jeu.categorie}</span>`;
 
-  // Étoiles de notation (lecture seule sur les cartes, juste pour affichage rapide)
-  const note = getNote(jeu.id);
-  if (note > 0) {
+  // Étoiles de notation (moyenne globale, lecture seule sur les cartes)
+  const moyenne = getNoteMoyenne(jeu.id);
+  const nbVotes = getNombreVotes(jeu.id);
+  if (nbVotes > 0) {
+    const noteRondie = Math.round(moyenne);
     const stars = document.createElement('div');
     stars.className = 'card-stars';
-    stars.innerHTML = '★'.repeat(note) + '☆'.repeat(5 - note);
+    stars.innerHTML = '★'.repeat(noteRondie) + '☆'.repeat(5 - noteRondie) +
+      ` <span class="card-stars-count">(${nbVotes})</span>`;
     info.appendChild(stars);
   }
 
@@ -429,7 +437,8 @@ function renderAlaUne() {
 // =========================================
 const isAccueil = document.getElementById('favoris-section') !== null;
 
-chargerJeux().then(() => {
+Promise.all([chargerJeux(), fetchAllGameStats()]).then(([_, stats]) => {
+  statsGlobales = stats;
   buildGenreMenu();
   initRandomButton();
   setupThemeToggle();

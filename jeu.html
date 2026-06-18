@@ -114,6 +114,11 @@
       flex-wrap: wrap;
     }
     .rating-label { color: var(--text-muted); }
+    .rating-average {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
     .rating-stars { font-size: 1.3rem; color: #faa627; }
     .star-pick { cursor: pointer; transition: transform 0.1s; }
     .star-pick:hover { transform: scale(1.15); }
@@ -201,6 +206,7 @@
         <span class="rating-label">Note ce jeu :</span>
         <span class="rating-stars" id="rating-stars"></span>
       </div>
+      <div id="rating-average" class="rating-average"></div>
 
       <div class="share-widget">
         <span class="rating-label">Partager :</span>
@@ -231,6 +237,7 @@
 
   <button id="back-to-top" aria-label="Retour en haut">↑</button>
 
+  <script src="js/supabase-stats.js"></script>
   <script>
     // =========================================
     // Lecture des paramètres URL
@@ -284,43 +291,64 @@
     addToRecents(gameId);
 
     // =========================================
-    // Compteur de parties jouées
+    // Compteur de clics global — partagé entre TOUS les visiteurs via Supabase
     // =========================================
-    function incrementPlayCounter(id) {
-      if (!id) return 0;
-      const key = `plays_${id}`;
-      const current = parseInt(localStorage.getItem(key) || '0', 10);
-      const updated = current + 1;
-      localStorage.setItem(key, updated);
-      return updated;
+    if (gameId) {
+      incrementGlobalPlayCount(gameId);
     }
-    const playCount = incrementPlayCounter(gameId);
-    document.getElementById('play-counter').textContent = `Tu as joué ${playCount} fois à ce jeu`;
+    // Affiche le total de clics une fois récupéré (légèrement différé pour ne pas
+    // bloquer le chargement du jeu)
+    fetchAllGameStats().then(allStats => {
+      const stats = allStats[gameId];
+      const total = stats ? stats.total_plays : 1;
+      document.getElementById('play-counter').textContent = `${total} clic${total > 1 ? 's' : ''} au total sur ce jeu`;
+    });
 
     // =========================================
-    // Notation par étoiles (localStorage, propre à ce visiteur)
+    // Notation par étoiles — partagée globalement via Supabase.
+    // localStorage retient juste si CE visiteur a déjà noté, pour afficher
+    // son propre choix visuellement (pas pour calculer la moyenne affichée).
     // =========================================
-    function getNoteActuelle() {
+    function getMaNoteLocale() {
       return parseInt(localStorage.getItem(`note_${gameId}`) || '0', 10);
     }
     function afficherEtoiles() {
-      const note = getNoteActuelle();
+      const maNote = getMaNoteLocale();
       const starsEl = document.getElementById('rating-stars');
       starsEl.innerHTML = '';
       for (let i = 1; i <= 5; i++) {
         const star = document.createElement('span');
-        star.textContent = i <= note ? '★' : '☆';
+        star.textContent = i <= maNote ? '★' : '☆';
         star.className = 'star-pick';
         star.setAttribute('role', 'button');
         star.setAttribute('aria-label', `Donner ${i} étoile${i > 1 ? 's' : ''}`);
         star.addEventListener('click', () => {
+          // Si déjà noté avant, on ne renvoie pas une 2e fois (évite de fausser la moyenne)
+          if (getMaNoteLocale() > 0) return;
           localStorage.setItem(`note_${gameId}`, i);
+          submitGlobalRating(gameId, i);
           afficherEtoiles();
+          afficherMoyenne();
         });
         starsEl.appendChild(star);
       }
     }
-    if (gameId) afficherEtoiles();
+    function afficherMoyenne() {
+      fetchAllGameStats().then(allStats => {
+        const stats = allStats[gameId];
+        const moyenne = getAverageRating(stats);
+        const moyenneEl = document.getElementById('rating-average');
+        if (moyenneEl) {
+          moyenneEl.textContent = stats && stats.rating_count > 0
+            ? `Note moyenne : ${moyenne.toFixed(1)}/5 (${stats.rating_count} vote${stats.rating_count > 1 ? 's' : ''})`
+            : 'Aucune note pour l\'instant';
+        }
+      });
+    }
+    if (gameId) {
+      afficherEtoiles();
+      afficherMoyenne();
+    }
 
     // =========================================
     // Boutons de partage social — ouvrent la fenêtre de partage classique de chaque réseau
@@ -456,6 +484,7 @@
 
   <!-- SDK GameDistribution -->
   <script src="https://html5.gamedistribution.com/libs/gd/5.0.1/gd-loader.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/cookie-banner.js"></script>
   <script src="js/analytics.js"></script>
 
