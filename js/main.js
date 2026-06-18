@@ -1,11 +1,8 @@
 // =========================================
-// Thème clair/sombre — appliqué immédiatement pour éviter un flash visuel
+// Thème clair/sombre — la pose initiale de data-theme se fait via un script
+// inline tout en haut du <head> de chaque page (avant le rendu), pour éviter
+// le flash visuel. Ici on gère seulement le bouton de bascule.
 // =========================================
-(function initTheme() {
-  const themeSauvegarde = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', themeSauvegarde);
-})();
-
 function setupThemeToggle() {
   const btn = document.getElementById('theme-toggle');
   if (!btn) return;
