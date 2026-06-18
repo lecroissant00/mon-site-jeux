@@ -32,6 +32,52 @@
       max-width: 100%;
       margin: 0 auto;
     }
+
+    /* Mode plein écran simulé en CSS — utilisé en fallback quand l'API
+       Fullscreen native du navigateur n'est pas disponible ou échoue
+       (cas fréquent sur mobile, notamment iOS). */
+    .iframe-wrap.fake-fullscreen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      z-index: 9999;
+      background: #000;
+      margin: 0;
+    }
+    .iframe-wrap.fake-fullscreen #game-frame {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      aspect-ratio: auto;
+    }
+    /* Empêche le scroll de la page derrière pendant le faux plein écran */
+    body.fake-fullscreen-active {
+      overflow: hidden;
+    }
+
+    .exit-fake-fullscreen-btn {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    .iframe-wrap.fake-fullscreen .exit-fake-fullscreen-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     #game-frame {
       max-width: 100%;
       border: none;
@@ -187,8 +233,9 @@
       <h1 id="game-title">Chargement...</h1>
       <div id="status-msg">⏳ Chargement du jeu...</div>
 
-      <div class="iframe-wrap">
-        <iframe id="game-frame" allowfullscreen scrolling="no" frameborder="0"></iframe>
+      <div class="iframe-wrap" id="iframe-wrap">
+        <iframe id="game-frame" allowfullscreen allow="fullscreen" webkitallowfullscreen mozallowfullscreen scrolling="no" frameborder="0"></iframe>
+        <button id="exit-fake-fullscreen" class="exit-fake-fullscreen-btn" aria-label="Quitter le plein écran">✕</button>
         <div class="pause-overlay" id="pause-overlay">⏸ Pub en cours...</div>
       </div>
 
@@ -459,17 +506,68 @@
     });
 
     // =========================================
-    // Bouton plein écran
+    // Bouton plein écran — tente l'API native du navigateur, et si elle échoue
+    // ou n'est pas disponible (cas fréquent sur mobile, notamment iOS), bascule
+    // automatiquement sur un mode plein écran simulé en CSS.
     // =========================================
-    document.getElementById('fullscreen-btn').addEventListener('click', () => {
-      if (iframe.requestFullscreen) {
-        iframe.requestFullscreen();
-      } else if (iframe.webkitRequestFullscreen) {
-        iframe.webkitRequestFullscreen();
-      } else if (iframe.msRequestFullscreen) {
-        iframe.msRequestFullscreen();
+    const iframeWrap = document.getElementById('iframe-wrap');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    function supporteFullscreenNatif() {
+      return !!(
+        document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.mozFullScreenEnabled ||
+        document.msFullscreenEnabled
+      );
+    }
+
+    function activerFullscreenCSS() {
+      iframeWrap.classList.add('fake-fullscreen');
+      document.body.classList.add('fake-fullscreen-active');
+    }
+
+    function quitterFullscreenCSS() {
+      iframeWrap.classList.remove('fake-fullscreen');
+      document.body.classList.remove('fake-fullscreen-active');
+    }
+
+    fullscreenBtn.addEventListener('click', () => {
+      // Si déjà en mode CSS simulé, on en sort en recliquant le bouton
+      if (iframeWrap.classList.contains('fake-fullscreen')) {
+        quitterFullscreenCSS();
+        return;
+      }
+
+      if (supporteFullscreenNatif()) {
+        const request = iframe.requestFullscreen || iframe.webkitRequestFullscreen ||
+          iframe.mozRequestFullScreen || iframe.msRequestFullscreen;
+        if (request) {
+          const result = request.call(iframe);
+          // requestFullscreen() peut être rejetée (Promise) sur certains mobiles
+          // même quand l'API existe — dans ce cas on bascule sur le fallback CSS.
+          if (result && typeof result.catch === 'function') {
+            result.catch(() => activerFullscreenCSS());
+          }
+          return;
+        }
+      }
+      // API non disponible du tout (cas iOS Safari) → fallback CSS direct
+      activerFullscreenCSS();
+    });
+
+    // Permet aussi de quitter le mode CSS simulé avec la touche Échap
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && iframeWrap.classList.contains('fake-fullscreen')) {
+        quitterFullscreenCSS();
       }
     });
+
+    // Bouton flottant "✕" visible uniquement en mode plein écran simulé
+    const exitFakeBtn = document.getElementById('exit-fake-fullscreen');
+    if (exitFakeBtn) {
+      exitFakeBtn.addEventListener('click', quitterFullscreenCSS);
+    }
 
     // =========================================
     // Bouton retour en haut
