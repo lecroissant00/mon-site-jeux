@@ -30,23 +30,12 @@ let jeux = []; // rempli après le fetch, avant ça reste vide
 
 async function chargerJeux() {
   try {
-    const reponse = await fetch('games.json');
-    if (!reponse.ok) throw new Error('games.json introuvable');
-    const data = await reponse.json();
-    // image vient directement de games.json (laisse vide "" si tu n'as pas encore l'URL,
-    // l'emoji prendra le relais automatiquement)
-    jeux = data.map(j => ({
-      id: j.id,
-      nom: j.nom,
-      categorie: j.categorie,
-      image: j.image || "",
-      emoji: j.emoji || "🎮",
-      width: j.width || 800,
-      height: j.height || 600,
-      dateAjout: j.dateAjout || null
-    }));
+    // Charge les jeux depuis Supabase (table "games") au lieu du fichier games.json.
+    // chargerJeuxDepuisSupabase() est définie dans js/supabase-stats.js
+    const data = await chargerJeuxDepuisSupabase();
+    jeux = data;
   } catch (err) {
-    console.error('Erreur de chargement de games.json :', err);
+    console.error('Erreur chargement des jeux depuis Supabase :', err);
     jeux = [];
   }
 }

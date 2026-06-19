@@ -73,3 +73,31 @@ function getAverageRating(stats) {
   if (!stats || !stats.rating_count) return 0;
   return stats.rating_sum / stats.rating_count;
 }
+
+// =========================================
+// Charge la liste des jeux depuis Supabase (remplace games.json)
+// Retourne un tableau dans le même format qu'avant pour compatibilité avec main.js
+// =========================================
+async function chargerJeuxDepuisSupabase() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_REST}/games?actif=eq.true&order=date_ajout.asc&select=id,nom,categorie,width,height,image,date_ajout`,
+      { headers: supabaseHeaders }
+    );
+    if (!res.ok) throw new Error('Erreur fetch games');
+    const data = await res.json();
+    return data.map(j => ({
+      id: j.id,
+      nom: j.nom,
+      categorie: j.categorie,
+      width: j.width || 800,
+      height: j.height || 600,
+      image: j.image || '',
+      emoji: '🎮',
+      dateAjout: j.date_ajout ? j.date_ajout.substring(0, 10) : null
+    }));
+  } catch (err) {
+    console.error('Supabase chargerJeuxDepuisSupabase:', err);
+    return [];
+  }
+}

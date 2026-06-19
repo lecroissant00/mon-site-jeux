@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — CroissantGames</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { padding: 0; }
+    .admin-wrap {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 4rem;
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .admin-header h1 { font-size: 1.4rem; color: var(--text-heading); }
+    .admin-header a { font-size: 0.85rem; color: #a78bfa; }
+
+    /* Login */
+    .login-box {
+      max-width: 360px;
+      margin: 6rem auto;
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .login-box h2 { color: var(--text-heading); margin-bottom: 1.2rem; }
+    .login-box input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+    .login-box button {
+      width: 100%;
+      background: #533ab7;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .login-box .error { color: #ef4444; font-size: 0.82rem; margin-top: 0.5rem; }
+
+    /* Form ajout/edit */
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .card h2 { font-size: 1rem; color: var(--text-heading); margin-bottom: 1.2rem; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      background: var(--bg-page);
+      color: var(--text-primary);
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #a78bfa;
+    }
+    .btn-primary {
+      background: #533ab7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 0.8rem;
+    }
+    .btn-primary:hover { background: #4530a0; }
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      margin-left: 0.5rem;
+    }
+    .parse-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+    .parse-btn {
+      background: #a78bfa;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 0.4rem;
+    }
+
+    /* Preview image */
+    .img-preview {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* Liste des jeux */
+    .games-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .game-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .game-row img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: var(--bg-secondary);
+      flex-shrink: 0;
+    }
+    .game-row .game-emoji {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .game-row-info { flex: 1; min-width: 0; }
+    .game-row-info .name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .game-row-info .meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .game-row-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+    .btn-edit {
+      background: #f3f0ff;
+      color: #533ab7;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-delete {
+      background: #fef2f2;
+      color: #ef4444;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-edit:hover { background: #ede9fe; }
+    .btn-delete:hover { background: #fee2e2; }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-left: 4px solid #4ade80; }
+    .toast.error { border-left: 4px solid #ef4444; }
+
+    /* Filtre recherche */
+    .search-admin {
+      width: 100%;
+      padding: 8px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    /* Stats rapides */
+    .stats-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .stat-chip {
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .stat-chip strong { color: var(--text-heading); }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Écran de connexion -->
+<div id="login-screen" class="login-box">
+  <h2>🔐 Admin CroissantGames</h2>
+  <input type="password" id="login-input" placeholder="Mot de passe..." autocomplete="current-password">
+  <button onclick="checkLogin()">Connexion</button>
+  <p class="error" id="login-error" style="display:none;">Mot de passe incorrect.</p>
+</div>
+
+<!-- Interface admin (cachée jusqu'à connexion) -->
+<div id="admin-content" style="display:none;">
+  <div class="admin-wrap">
+
+    <div class="admin-header">
+      <h1>🎮 Admin — CroissantGames</h1>
+      <a href="index.html">← Retour au site</a>
+    </div>
+
+    <!-- Formulaire ajout / modification -->
+    <div class="card">
+      <h2 id="form-title">➕ Ajouter un jeu</h2>
+
+      <div class="form-group full" style="margin-bottom:0.8rem;">
+        <label>Coller l'iframe GameDistribution (optionnel — remplit l'ID et les dimensions automatiquement)</label>
+        <input type="text" id="iframe-input" placeholder='<iframe src="https://html5.gamedistribution.com/GAME_ID/..." width="800" height="600" ...>'>
+        <button class="parse-btn" onclick="parseIframe()">🔍 Extraire les infos</button>
+        <p class="parse-hint">Tu peux aussi remplir les champs manuellement sans coller d'iframe.</p>
+      </div>
+
+      <div class="form-grid" style="margin-top:1rem;">
+        <div class="form-group full">
+          <label>Game ID (GameDistribution) *</label>
+          <input type="text" id="f-id" placeholder="ex: 116e0e450a374f24877fa02ad98a2e62">
+        </div>
+        <div class="form-group full">
+          <label>Nom du jeu *</label>
+          <input type="text" id="f-nom" placeholder="ex: Football Rush 3D">
+        </div>
+        <div class="form-group">
+          <label>Catégorie *</label>
+          <input type="text" id="f-cat" placeholder="ex: Football" list="cat-suggestions">
+          <datalist id="cat-suggestions"></datalist>
+        </div>
+        <div class="form-group">
+          <label>Format</label>
+          <select id="f-format">
+            <option value="800x600">Paysage standard (800×600)</option>
+            <option value="1280x720">Paysage large (1280×720)</option>
+            <option value="480x800">Portrait (480×800)</option>
+            <option value="450x800">Portrait compact (450×800)</option>
+            <option value="1200x1600">Portrait large (1200×1600)</option>
+            <option value="custom">Personnalisé...</option>
+          </select>
+        </div>
+        <div class="form-group" id="custom-w-group" style="display:none;">
+          <label>Largeur (px)</label>
+          <input type="number" id="f-width" placeholder="800">
+        </div>
+        <div class="form-group" id="custom-h-group" style="display:none;">
+          <label>Hauteur (px)</label>
+          <input type="number" id="f-height" placeholder="600">
+        </div>
+        <div class="form-group full">
+          <label>URL de l'image (thumbnail GameDistribution)</label>
+          <input type="text" id="f-image" placeholder="https://img.gamedistribution.com/GAME_ID-512x384.jpg" oninput="previewImage(this.value)">
+          <img id="img-preview" class="img-preview" alt="preview">
+        </div>
+      </div>
+
+      <div>
+        <button class="btn-primary" onclick="saveGame()">💾 Enregistrer</button>
+        <button class="btn-secondary" id="cancel-edit-btn" style="display:none;" onclick="resetForm()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Liste des jeux -->
+    <div class="card">
+      <h2>📋 Jeux sur le site</h2>
+      <div class="stats-bar" id="stats-bar"></div>
+      <input class="search-admin" id="search-admin" type="text" placeholder="🔍 Filtrer les jeux..." oninput="filtrerJeux(this.value)">
+      <div class="games-list" id="games-list">
+        <p style="color:var(--text-muted); font-size:0.85rem;">Chargement...</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+// =========================================
+// Configuration Supabase
+// =========================================
+const SUPABASE_URL = 'https://cpkoeeluffenzmlsispq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_pX5s3ol4an30qdUJEq14kQ_p2N_2DUZ';
+const REST = `${SUPABASE_URL}/rest/v1`;
+const HEADERS = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// =========================================
+// Mot de passe admin — change-le par ce que tu veux
+// =========================================
+const ADMIN_PASSWORD = 'croissant2026';
+
+// =========================================
+// Login
+// =========================================
+function checkLogin() {
+  const val = document.getElementById('login-input').value;
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-content').style.display = 'block';
+    sessionStorage.setItem('adminLogged', 'true');
+    chargerJeux();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+document.getElementById('login-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') checkLogin();
+});
+
+// Auto-login si déjà connecté dans cette session
+if (sessionStorage.getItem('adminLogged') === 'true') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-content').style.display = 'block';
+  chargerJeux();
+}
+
+// =========================================
+// Toast
+// =========================================
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => { t.classList.remove('show'); }, 3000);
+}
+
+// =========================================
+// Format sélect → dimensions custom
+// =========================================
+document.getElementById('f-format').addEventListener('change', function() {
+  const custom = this.value === 'custom';
+  document.getElementById('custom-w-group').style.display = custom ? 'block' : 'none';
+  document.getElementById('custom-h-group').style.display = custom ? 'block' : 'none';
+});
+
+// =========================================
+// Parsing iframe GameDistribution
+// =========================================
+function parseIframe() {
+  const raw = document.getElementById('iframe-input').value.trim();
+  const idMatch = raw.match(/html5\.gamedistribution\.com\/([a-f0-9]{32})/i);
+  const wMatch = raw.match(/width="?(\d+)"?/i);
+  const hMatch = raw.match(/height="?(\d+)"?/i);
+
+  if (idMatch) {
+    const gameId = idMatch[1];
+    document.getElementById('f-id').value = gameId;
+    // Auto-fill thumbnail URL
+    const imgUrl = `https://img.gamedistribution.com/${gameId}-512x384.jpg`;
+    document.getElementById('f-image').value = imgUrl;
+    previewImage(imgUrl);
+  }
+  if (wMatch && hMatch) {
+    const w = parseInt(wMatch[1]);
+    const h = parseInt(hMatch[1]);
+    setDimensions(w, h);
+  }
+  if (idMatch || wMatch) {
+    showToast('Infos extraites de l\'iframe ✓');
+  } else {
+    showToast('Aucun ID trouvé dans cet iframe', 'error');
+  }
+}
+
+function setDimensions(w, h) {
+  const sel = document.getElementById('f-format');
+  const formats = { '800x600': [800,600], '1280x720': [1280,720], '480x800': [480,800], '450x800': [450,800], '1200x1600': [1200,1600] };
+  for (const [key, [fw, fh]] of Object.entries(formats)) {
+    if (fw === w && fh === h) { sel.value = key; return; }
+  }
+  sel.value = 'custom';
+  document.getElementById('custom-w-group').style.display = 'block';
+  document.getElementById('custom-h-group').style.display = 'block';
+  document.getElementById('f-width').value = w;
+  document.getElementById('f-height').value = h;
+}
+
+function previewImage(url) {
+  const img = document.getElementById('img-preview');
+  if (url) {
+    img.src = url;
+    img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; };
+  } else {
+    img.style.display = 'none';
+  }
+}
+
+// =========================================
+// Charger et afficher les jeux
+// =========================================
+let tousLesJeux = [];
+let editingId = null;
+
+async function chargerJeux() {
+  try {
+    const res = await fetch(`${REST}/games?order=date_ajout.desc&actif=eq.true`, { headers: HEADERS });
+    tousLesJeux = await res.json();
+    afficherJeux(tousLesJeux);
+    mettreAJourStats(tousLesJeux);
+    remplirSuggestions(tousLesJeux);
+  } catch (e) {
+    showToast('Erreur chargement des jeux', 'error');
+  }
+}
+
+function mettreAJourStats(jeux) {
+  const cats = [...new Set(jeux.map(j => j.categorie))];
+  const avecImage = jeux.filter(j => j.image).length;
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-chip"><strong>${jeux.length}</strong> jeux</div>
+    <div class="stat-chip"><strong>${cats.length}</strong> catégories</div>
+    <div class="stat-chip"><strong>${avecImage}</strong> avec image</div>
+    <div class="stat-chip"><strong>${jeux.length - avecImage}</strong> sans image</div>
+  `;
+}
+
+function remplirSuggestions(jeux) {
+  const cats = [...new Set(jeux.map(j => j.categorie))].sort();
+  const dl = document.getElementById('cat-suggestions');
+  dl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+}
+
+function afficherJeux(jeux) {
+  const list = document.getElementById('games-list');
+  if (jeux.length === 0) {
+    list.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Aucun jeu trouvé.</p>';
+    return;
+  }
+  list.innerHTML = jeux.map(j => `
+    <div class="game-row">
+      ${j.image
+        ? `<img src="${j.image}" alt="${j.nom}" onerror="this.style.display='none'">`
+        : `<div class="game-emoji">🎮</div>`}
+      <div class="game-row-info">
+        <div class="name">${j.nom}</div>
+        <div class="meta">${j.categorie} · ${j.width}×${j.height} · <span style="font-family:monospace;font-size:0.68rem;">${j.id.substring(0,12)}...</span></div>
+      </div>
+      <div class="game-row-actions">
+        <button class="btn-edit" onclick="editerJeu('${j.id}')">✏️ Modifier</button>
+        <button class="btn-delete" onclick="supprimerJeu('${j.id}', '${j.nom.replace(/'/g, "\\'")}')">🗑️ Supprimer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filtrerJeux(terme) {
+  const t = terme.toLowerCase();
+  const filtres = tousLesJeux.filter(j =>
+    j.nom.toLowerCase().includes(t) ||
+    j.categorie.toLowerCase().includes(t) ||
+    j.id.includes(t)
+  );
+  afficherJeux(filtres);
+}
+
+// =========================================
+// Sauvegarder un jeu (ajout ou modification)
+// =========================================
+async function saveGame() {
+  const id = document.getElementById('f-id').value.trim();
+  const nom = document.getElementById('f-nom').value.trim();
+  const cat = document.getElementById('f-cat').value.trim();
+  const format = document.getElementById('f-format').value;
+  const image = document.getElementById('f-image').value.trim();
+
+  if (!id || !nom || !cat) {
+    showToast('Game ID, nom et catégorie sont obligatoires', 'error');
+    return;
+  }
+
+  let width, height;
+  if (format === 'custom') {
+    width = parseInt(document.getElementById('f-width').value) || 800;
+    height = parseInt(document.getElementById('f-height').value) || 600;
+  } else {
+    [width, height] = format.split('x').map(Number);
+  }
+
+  const payload = { id, nom, categorie: cat, width, height, image, actif: true };
+
+  try {
+    let res;
+    if (editingId) {
+      // Modification
+      res = await fetch(`${REST}/games?id=eq.${editingId}`, {
+        method: 'PATCH',
+        headers: HEADERS,
+        body: JSON.stringify({ nom, categorie: cat, width, height, image })
+      });
+    } else {
+      // Ajout
+      res = await fetch(`${REST}/games`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (res.ok) {
+      showToast(editingId ? '✓ Jeu modifié !' : '✓ Jeu ajouté !');
+      resetForm();
+      chargerJeux();
+    } else {
+      const err = await res.json();
+      showToast(err.message || 'Erreur lors de la sauvegarde', 'error');
+    }
+  } catch (e) {
+    showToast('Erreur réseau', 'error');
+  }
+}
+
+// =========================================
+// Modifier un jeu (pré-remplit le formulaire)
+// =========================================
+function editerJeu(id) {
+  const jeu = tousLesJeux.find(j => j.id === id);
+  if (!jeu) return;
+
+  editingId = id;
+  document.getElementById('f-id').value = jeu.id;
+  document.getElementById('f-id').disabled = true; // on ne peut pas changer l'ID
+  document.getElementById('f-nom').value = jeu.nom;
+  document.getElementById('f-cat').value = jeu.categorie;
+  document.getElementById('f-image').value = jeu.image || '';
+  setDimensions(jeu.width, jeu.height);
+  previewImage(jeu.image);
+
+  document.getElementById('form-title').textContent = `✏️ Modifier : ${jeu.nom}`;
+  document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+
+  // Scroll vers le formulaire
+  document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+}
+
+// =========================================
+// Supprimer un jeu
+// =========================================
+async function supprimerJeu(id, nom) {
+  if (!confirm(`Supprimer "${nom}" du site ? Cette action est irréversible.`)) return;
+
+  try {
+    const res = await fetch(`${REST}/games?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: HEADERS
+    });
+    if (res.ok) {
+      showToast(`🗑️ "${nom}" supprimé`);
+      chargerJeux();
+    } else {
+      showToast('Erreur lors de la suppression', 'error');
+    }
+  } catch (e) {
+    showToast('Erreur réseau', 'error');
+  }
+}
+
+// =========================================
+// Reset formulaire
+// =========================================
+function resetForm() {
+  editingId = null;
+  document.getElementById('f-id').value = '';
+  document.getElementById('f-id').disabled = false;
+  document.getElementById('f-nom').value = '';
+  document.getElementById('f-cat').value = '';
+  document.getElementById('f-image').value = '';
+  document.getElementById('f-format').value = '800x600';
+  document.getElementById('iframe-input').value = '';
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('custom-w-group').style.display = 'none';
+  document.getElementById('custom-h-group').style.display = 'none';
+  document.getElementById('form-title').textContent = '➕ Ajouter un jeu';
+  document.getElementById('cancel-edit-btn').style.display = 'none';
+}
+</script>
+</body>
+</html>
