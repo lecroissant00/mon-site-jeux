@@ -193,6 +193,18 @@
       cursor: pointer;
       font-weight: 600;
     }
+    .btn-vedette {
+      background: #fafafa;
+      border: 1px solid var(--border-color);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.15s;
+    }
+    .btn-vedette.active { opacity: 1; }
+    .btn-vedette:hover { opacity: 1; }
     .btn-delete {
       background: #fef2f2;
       color: #ef4444;
@@ -328,6 +340,14 @@
           <label>URL de l'image (thumbnail GameDistribution)</label>
           <input type="text" id="f-image" placeholder="https://img.gamedistribution.com/GAME_ID-512x384.jpg" oninput="previewImage(this.value)">
           <img id="img-preview" class="img-preview" alt="preview">
+        </div>
+        <div class="form-group">
+          <label>Ordre d'affichage (0 = premier)</label>
+          <input type="number" id="f-ordre" value="0" min="0">
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.6rem; padding-top:1.5rem;">
+          <input type="checkbox" id="f-vedette" style="width:18px; height:18px; cursor:pointer;">
+          <label for="f-vedette" style="cursor:pointer; margin:0;">⭐ Mettre en vedette (apparaît en premier sur le site)</label>
         </div>
       </div>
 
@@ -478,7 +498,7 @@ let editingId = null;
 
 async function chargerJeux() {
   try {
-    const res = await fetch(`${REST}/games?order=date_ajout.desc&actif=eq.true`, { headers: HEADERS });
+    const res = await fetch(`${REST}/games?order=vedette.desc,ordre.asc,date_ajout.desc&actif=eq.true`, { headers: HEADERS });
     tousLesJeux = await res.json();
     afficherJeux(tousLesJeux);
     mettreAJourStats(tousLesJeux);
@@ -517,10 +537,14 @@ function afficherJeux(jeux) {
         ? `<img src="${j.image}" alt="${j.nom}" onerror="this.style.display='none'">`
         : `<div class="game-emoji">🎮</div>`}
       <div class="game-row-info">
-        <div class="name">${j.nom}</div>
-        <div class="meta">${j.categorie} · ${j.width}×${j.height} · <span style="font-family:monospace;font-size:0.68rem;">${j.id.substring(0,12)}...</span></div>
+        <div class="name">
+          ${j.vedette ? '<span style="color:#f59e0b;" title="En vedette">⭐</span> ' : ''}
+          ${j.nom}
+        </div>
+        <div class="meta">${j.categorie} · ${j.width}×${j.height} · ordre: ${j.ordre || 0} · <span style="font-family:monospace;font-size:0.68rem;">${j.id.substring(0,12)}...</span></div>
       </div>
       <div class="game-row-actions">
+        <button class="btn-vedette ${j.vedette ? 'active' : ''}" onclick="toggleVedette('${j.id}', ${j.vedette})" title="${j.vedette ? 'Retirer de la vedette' : 'Mettre en vedette'}">⭐</button>
         <button class="btn-edit" onclick="editerJeu('${j.id}')">✏️ Modifier</button>
         <button class="btn-delete" onclick="supprimerJeu('${j.id}', '${j.nom.replace(/'/g, "\\'")}')">🗑️ Supprimer</button>
       </div>
@@ -547,6 +571,8 @@ async function saveGame() {
   const cat = document.getElementById('f-cat').value.trim();
   const format = document.getElementById('f-format').value;
   const image = document.getElementById('f-image').value.trim();
+  const ordre = parseInt(document.getElementById('f-ordre').value) || 0;
+  const vedette = document.getElementById('f-vedette').checked;
 
   if (!id || !nom || !cat) {
     showToast('Game ID, nom et catégorie sont obligatoires', 'error');
@@ -561,19 +587,17 @@ async function saveGame() {
     [width, height] = format.split('x').map(Number);
   }
 
-  const payload = { id, nom, categorie: cat, width, height, image, actif: true };
+  const payload = { id, nom, categorie: cat, width, height, image, ordre, vedette, actif: true };
 
   try {
     let res;
     if (editingId) {
-      // Modification
       res = await fetch(`${REST}/games?id=eq.${editingId}`, {
         method: 'PATCH',
         headers: HEADERS,
-        body: JSON.stringify({ nom, categorie: cat, width, height, image })
+        body: JSON.stringify({ nom, categorie: cat, width, height, image, ordre, vedette })
       });
     } else {
-      // Ajout
       res = await fetch(`${REST}/games`, {
         method: 'POST',
         headers: HEADERS,
@@ -603,18 +627,38 @@ function editerJeu(id) {
 
   editingId = id;
   document.getElementById('f-id').value = jeu.id;
-  document.getElementById('f-id').disabled = true; // on ne peut pas changer l'ID
+  document.getElementById('f-id').disabled = true;
   document.getElementById('f-nom').value = jeu.nom;
   document.getElementById('f-cat').value = jeu.categorie;
   document.getElementById('f-image').value = jeu.image || '';
+  document.getElementById('f-ordre').value = jeu.ordre || 0;
+  document.getElementById('f-vedette').checked = jeu.vedette || false;
   setDimensions(jeu.width, jeu.height);
   previewImage(jeu.image);
 
   document.getElementById('form-title').textContent = `✏️ Modifier : ${jeu.nom}`;
   document.getElementById('cancel-edit-btn').style.display = 'inline-block';
 
-  // Scroll vers le formulaire
   document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+}
+
+// =========================================
+// Basculer vedette rapidement sans ouvrir le formulaire
+// =========================================
+async function toggleVedette(id, estVedette) {
+  try {
+    const res = await fetch(`${REST}/games?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: HEADERS,
+      body: JSON.stringify({ vedette: !estVedette })
+    });
+    if (res.ok) {
+      showToast(!estVedette ? '⭐ Mis en vedette !' : 'Retiré de la vedette');
+      chargerJeux();
+    }
+  } catch (e) {
+    showToast('Erreur réseau', 'error');
+  }
 }
 
 // =========================================
@@ -650,6 +694,8 @@ function resetForm() {
   document.getElementById('f-cat').value = '';
   document.getElementById('f-image').value = '';
   document.getElementById('f-format').value = '800x600';
+  document.getElementById('f-ordre').value = '0';
+  document.getElementById('f-vedette').checked = false;
   document.getElementById('iframe-input').value = '';
   document.getElementById('img-preview').style.display = 'none';
   document.getElementById('custom-w-group').style.display = 'none';

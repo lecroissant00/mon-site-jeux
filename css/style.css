@@ -131,6 +131,16 @@ a { text-decoration: none; color: inherit; }
   white-space: nowrap;
 }
 .genre-menu a:hover { background: #f0eefe; color: #533ab7; }
+.genre-count {
+  background: #ede9fe;
+  color: #533ab7;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 4px;
+  float: right;
+}
 
 /* ===== Bouton jeu au hasard ===== */
 .random-btn {
@@ -481,7 +491,25 @@ a { text-decoration: none; color: inherit; }
 #back-to-top.visible { display: block; }
 
 
-/* ===== Footer ===== */
+/* ===== Bouton "Voir plus" ===== */
+.voir-plus-btn {
+  display: block;
+  margin: 1.5rem auto 0;
+  background: var(--bg-card);
+  color: var(--text-heading);
+  border: 1px solid var(--border-color);
+  padding: 12px 32px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.voir-plus-btn:hover {
+  background: #ede9fe;
+  border-color: #a78bfa;
+  color: #533ab7;
+}
 .site-footer {
   text-align: center;
   padding: 2rem 1rem;

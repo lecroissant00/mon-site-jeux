@@ -77,11 +77,12 @@ function getAverageRating(stats) {
 // =========================================
 // Charge la liste des jeux depuis Supabase (remplace games.json)
 // Retourne un tableau dans le même format qu'avant pour compatibilité avec main.js
+// Les jeux "En vedette" apparaissent en premier, puis triés par ordre.
 // =========================================
 async function chargerJeuxDepuisSupabase() {
   try {
     const res = await fetch(
-      `${SUPABASE_REST}/games?actif=eq.true&order=date_ajout.asc&select=id,nom,categorie,width,height,image,date_ajout`,
+      `${SUPABASE_REST}/games?actif=eq.true&order=vedette.desc,ordre.asc,date_ajout.asc&select=id,nom,categorie,width,height,image,date_ajout,vedette`,
       { headers: supabaseHeaders }
     );
     if (!res.ok) throw new Error('Erreur fetch games');
@@ -94,7 +95,8 @@ async function chargerJeuxDepuisSupabase() {
       height: j.height || 600,
       image: j.image || '',
       emoji: '🎮',
-      dateAjout: j.date_ajout ? j.date_ajout.substring(0, 10) : null
+      dateAjout: j.date_ajout ? j.date_ajout.substring(0, 10) : null,
+      vedette: j.vedette || false
     }));
   } catch (err) {
     console.error('Supabase chargerJeuxDepuisSupabase:', err);

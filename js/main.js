@@ -101,9 +101,10 @@ function buildGenreMenu() {
   menu.style.gridTemplateColumns = genresUniques.length > 6 ? '1fr 1fr' : '1fr';
 
   genresUniques.forEach(genre => {
+    const count = jeux.filter(j => j.categorie === genre).length;
     const a = document.createElement('a');
     a.href = `categorie.html?cat=${encodeURIComponent(genre)}`;
-    a.textContent = genre;
+    a.innerHTML = `${genre} <span class="genre-count">${count}</span>`;
     menu.appendChild(a);
   });
 
@@ -256,23 +257,72 @@ function renderSkeletons(container, count = 8) {
 }
 
 // =========================================
-// Génération de la grille principale (avec skeleton puis vraies cartes)
-// Insère une grande tuile (2x2) toutes les 7 cartes pour casser la
-// monotonie visuelle, façon Poki — uniquement sur la grille principale.
+// Génération de la grille principale avec pagination
+// Affiche 24 jeux par page, bouton "Voir plus" pour charger la suite.
 // =========================================
+const PAGE_SIZE = 24;
+let pageActuelle = 1;
+let listeComplete = [];
+
 function generateCards(liste) {
+  listeComplete = liste;
+  pageActuelle = 1;
   renderSkeletons(grid);
   setTimeout(() => {
     grid.innerHTML = '';
-    if (liste.length === 0) {
-      grid.innerHTML = '<p style="color:#888;">Aucun jeu trouvé.</p>';
-      return;
-    }
-    liste.forEach((jeu, index) => {
-      const taille = (index > 0 && index % 7 === 0) ? 'big' : 'normal';
-      grid.appendChild(createCard(jeu, taille));
-    });
+    afficherPage();
   }, 300);
+}
+
+function afficherPage() {
+  if (listeComplete.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-muted);">Aucun jeu trouvé.</p>';
+    supprimerBoutonVoirPlus();
+    return;
+  }
+
+  const debut = 0;
+  const fin = pageActuelle * PAGE_SIZE;
+  const visible = listeComplete.slice(debut, fin);
+
+  // Efface seulement les cartes (pas le bouton "Voir plus" s'il existe)
+  const boutonExistant = document.getElementById('voir-plus-btn');
+  grid.innerHTML = '';
+  if (boutonExistant) boutonExistant.remove();
+
+  visible.forEach((jeu, index) => {
+    const taille = (index > 0 && index % 7 === 0) ? 'big' : 'normal';
+    grid.appendChild(createCard(jeu, taille));
+  });
+
+  // Affiche le bouton "Voir plus" s'il reste des jeux à charger
+  if (fin < listeComplete.length) {
+    afficherBoutonVoirPlus(listeComplete.length - fin);
+  } else {
+    supprimerBoutonVoirPlus();
+  }
+}
+
+function afficherBoutonVoirPlus(restants) {
+  let btn = document.getElementById('voir-plus-btn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'voir-plus-btn';
+    btn.className = 'voir-plus-btn';
+    grid.parentElement.appendChild(btn);
+  }
+  btn.textContent = `Voir plus (${restants} jeux restants)`;
+  btn.onclick = () => {
+    pageActuelle++;
+    afficherPage();
+    // Scroll doux vers les nouvelles cartes
+    btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+}
+
+function supprimerBoutonVoirPlus() {
+  const btn = document.getElementById('voir-plus-btn');
+  if (btn) btn.remove();
 }
 
 // =========================================
