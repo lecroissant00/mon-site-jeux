@@ -76,7 +76,8 @@ a { text-decoration: none; color: inherit; }
 .search-bar {
   flex: 1 1 160px;
   min-width: 0;
-  max-width: 220px;
+  max-width: 280px;
+  position: relative;
 }
 .search-bar input {
   border: none;
@@ -89,6 +90,85 @@ a { text-decoration: none; color: inherit; }
   outline: none;
 }
 .search-bar input::placeholder { color: #999; }
+
+/* Dropdown suggestions */
+.search-suggestions {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  z-index: 9999;
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+html[data-theme="dark"] .search-suggestions { background: #1e1e2e; }
+
+.search-suggestions.open { display: block; }
+
+.search-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.search-suggestion-item:hover {
+  background: #f0eefe;
+}
+html[data-theme="dark"] .search-suggestion-item:hover {
+  background: #2a2a3a;
+}
+.search-suggestion-item img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+}
+.search-suggestion-item .suggestion-emoji {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.search-suggestion-info .suggestion-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+.search-suggestion-info .suggestion-cat {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.search-suggestion-none {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.search-suggestion-item.focused,
+.search-suggestion-item:focus {
+  background: #f0eefe;
+  outline: none;
+}
+html[data-theme="dark"] .search-suggestion-item.focused,
+html[data-theme="dark"] .search-suggestion-item:focus {
+  background: #2a2a3a;
+}
 
 /* ===== Menu déroulant des genres ===== */
 .genre-dropdown {

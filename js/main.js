@@ -372,25 +372,85 @@ function filtrerParCategorie(cat) {
 // =========================================
 // Recherche en temps réel
 // =========================================
+// =========================================
+// Recherche avec suggestions en temps réel
+// Affiche un dropdown avec les jeux correspondants, cliquable directement.
+// Sur index.html, filtre aussi la grille principale.
+// =========================================
+const searchSuggestions = document.getElementById('search-suggestions');
+
+function ouvrirSuggestions(terme) {
+  if (!searchSuggestions) return;
+  if (!terme) {
+    fermerSuggestions();
+    return;
+  }
+  const resultats = jeux
+    .filter(j => j.nom.toLowerCase().includes(terme.toLowerCase()))
+    .slice(0, 8); // max 8 suggestions
+
+  searchSuggestions.innerHTML = '';
+
+  if (resultats.length === 0) {
+    searchSuggestions.innerHTML = `<div class="search-suggestion-none">Aucun jeu trouvé pour "${terme}"</div>`;
+  } else {
+    resultats.forEach(jeu => {
+      const a = document.createElement('a');
+      a.className = 'search-suggestion-item';
+      a.href = `jeu.html?id=${encodeURIComponent(jeu.id)}&nom=${encodeURIComponent(jeu.nom)}&w=${jeu.width || 800}&h=${jeu.height || 600}`;
+
+      const thumb = jeu.image
+        ? `<img src="${jeu.image}" alt="${jeu.nom}" onerror="this.style.display='none'">`
+        : `<div class="suggestion-emoji">🎮</div>`;
+
+      a.innerHTML = `
+        ${thumb}
+        <div class="search-suggestion-info">
+          <div class="suggestion-name">${jeu.nom}</div>
+          <div class="suggestion-cat">${jeu.categorie}</div>
+        </div>
+      `;
+      searchSuggestions.appendChild(a);
+    });
+  }
+
+  searchSuggestions.classList.add('open');
+}
+
+function fermerSuggestions() {
+  if (!searchSuggestions) return;
+  searchSuggestions.classList.remove('open');
+  searchSuggestions.innerHTML = '';
+}
+
 if (searchInput) {
   let searchTrackTimeout = null;
 
   searchInput.addEventListener('input', (e) => {
-    const terme = e.target.value.trim().toLowerCase();
-    if (terme === '') {
-      generateCards(jeux);
-      return;
-    }
-    const resultats = jeux.filter(j => j.nom.toLowerCase().includes(terme));
-    grid.innerHTML = '';
-    if (resultats.length === 0) {
-      grid.innerHTML = '<p style="color:#888;">Aucun résultat pour cette recherche.</p>';
-    } else {
-      resultats.forEach(jeu => grid.appendChild(createCard(jeu)));
+    const terme = e.target.value.trim();
+
+    // Suggestions dropdown — fonctionne sur toutes les pages
+    ouvrirSuggestions(terme);
+
+    // Filtrage de la grille principale — uniquement sur index.html
+    if (grid && isAccueil) {
+      if (terme === '') {
+        generateCards(trierParPopularite(jeux));
+      } else {
+        const resultats = jeux.filter(j => j.nom.toLowerCase().includes(terme.toLowerCase()));
+        grid.innerHTML = '';
+        supprimerBoutonVoirPlus();
+        if (resultats.length === 0) {
+          grid.innerHTML = '<p style="color:var(--text-muted);">Aucun résultat.</p>';
+        } else {
+          resultats.forEach((jeu, index) => {
+            grid.appendChild(createCard(jeu, index % 7 === 0 && index > 0 ? 'big' : 'normal'));
+          });
+        }
+      }
     }
 
-    // Track la recherche seulement après une pause de frappe (800ms),
-    // pour éviter d'envoyer un event à chaque lettre tapée.
+    // Tracking GA (debounced 800ms)
     clearTimeout(searchTrackTimeout);
     searchTrackTimeout = setTimeout(() => {
       if (typeof trackEvent === 'function' && terme) {
@@ -398,6 +458,63 @@ if (searchInput) {
       }
     }, 800);
   });
+
+  // Ferme les suggestions en cliquant ailleurs
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-bar')) {
+      fermerSuggestions();
+    }
+  });
+
+  // Navigation clavier dans les suggestions
+  searchInput.addEventListener('keydown', (e) => {
+    const items = searchSuggestions ? searchSuggestions.querySelectorAll('.search-suggestion-item') : [];
+    const current = searchSuggestions ? searchSuggestions.querySelector('.search-suggestion-item.focused') : null;
+    if (e.key === 'Escape') {
+      fermerSuggestions();
+      searchInput.blur();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!current && items.length) {
+        items[0].classList.add('focused');
+        items[0].focus();
+      }
+    } else if (e.key === 'Enter' && !current) {
+      // Entrée sans sélection → va au premier résultat
+      const premier = searchSuggestions ? searchSuggestions.querySelector('.search-suggestion-item') : null;
+      if (premier) premier.click();
+    }
+  });
+
+  // Navigation clavier dans la liste de suggestions
+  if (searchSuggestions) {
+    searchSuggestions.addEventListener('keydown', (e) => {
+      const items = searchSuggestions.querySelectorAll('.search-suggestion-item');
+      const focused = searchSuggestions.querySelector('.search-suggestion-item.focused');
+      const idx = [...items].indexOf(focused);
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (idx < items.length - 1) {
+          focused && focused.classList.remove('focused');
+          items[idx + 1].classList.add('focused');
+          items[idx + 1].focus();
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (idx > 0) {
+          focused && focused.classList.remove('focused');
+          items[idx - 1].classList.add('focused');
+          items[idx - 1].focus();
+        } else {
+          focused && focused.classList.remove('focused');
+          searchInput.focus();
+        }
+      } else if (e.key === 'Escape') {
+        fermerSuggestions();
+        searchInput.focus();
+      }
+    });
+  }
 }
 
 // =========================================
