@@ -1,6 +1,10 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/jeux/:slug", "destination": "/jeu.html" },
+    { "source": "/categorie/:cat", "destination": "/categorie.html" }
+  ],
   "headers": [
     {
       "source": "/css/(.*)",

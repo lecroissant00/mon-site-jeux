@@ -54,6 +54,15 @@ const searchInput = document.getElementById('search-input');
 // =========================================
 let statsGlobales = {};
 
+// =========================================
+// URL propre vers un jeu — utilise le slug si disponible (SEO)
+// Ex: /jeux/football-rush-3d au lieu de jeu.html?id=xxx
+// =========================================
+function getJeuUrl(jeu) {
+  if (jeu.slug) return `/jeux/${jeu.slug}`;
+  return `jeu.html?id=${encodeURIComponent(jeu.id)}&nom=${encodeURIComponent(jeu.nom)}&w=${jeu.width || 800}&h=${jeu.height || 600}`;
+}
+
 function getPlayCount(gameId) {
   const stats = statsGlobales[gameId];
   return stats ? stats.total_plays : 0;
@@ -168,7 +177,7 @@ function createCard(jeu, taille = 'normal') {
   card.className = 'game-card' + (taille !== 'normal' ? ` featured-${taille}` : '');
 
   const link = document.createElement('a');
-  link.href = `jeu.html?id=${encodeURIComponent(jeu.id)}&nom=${encodeURIComponent(jeu.nom)}&w=${jeu.width || 800}&h=${jeu.height || 600}`;
+  link.href = getJeuUrl(jeu);
   link.style.display = 'block';
   link.style.height = '100%';
 
@@ -397,7 +406,7 @@ function ouvrirSuggestions(terme) {
     resultats.forEach(jeu => {
       const a = document.createElement('a');
       a.className = 'search-suggestion-item';
-      a.href = `jeu.html?id=${encodeURIComponent(jeu.id)}&nom=${encodeURIComponent(jeu.nom)}&w=${jeu.width || 800}&h=${jeu.height || 600}`;
+      a.href = getJeuUrl(jeu);
 
       const thumb = jeu.image
         ? `<img src="${jeu.image}" alt="${jeu.nom}" onerror="this.style.display='none'">`
@@ -540,7 +549,7 @@ if (backToTop) {
 function jouerAuHasard() {
   if (jeux.length === 0) return;
   const jeuAleatoire = jeux[Math.floor(Math.random() * jeux.length)];
-  window.location.href = `jeu.html?id=${encodeURIComponent(jeuAleatoire.id)}&nom=${encodeURIComponent(jeuAleatoire.nom)}&w=${jeuAleatoire.width || 800}&h=${jeuAleatoire.height || 600}`;
+  window.location.href = getJeuUrl(jeuAleatoire);
 }
 
 function initRandomButton() {

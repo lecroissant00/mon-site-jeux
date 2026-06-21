@@ -1,183 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://croissantgames.fr/index.html</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Action</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/mentions-legales</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://croissantgames.fr/categorie/football</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Puzzle</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/bubble-shooter</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Aventure</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/battle</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Course</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/puzzle</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Sport</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/match-3</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Football</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/casual</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Bubble%20shooter</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/cards</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/categorie.html?cat=Battle</loc>
-    <lastmod>2026-06-17</lastmod>
+    <loc>https://croissantgames.fr/categorie/simulation</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=5d8d11e9919245939a57378a02b8fc8b&nom=Jeu%201%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/football-rush-3d</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=42bfa359db1e405f8cc84b181c206f7c&nom=Jeu%202%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/bubble-pop-legend</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=b9ad7cca160e4be386d5f62da00ada7e&nom=Jeu%203%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/football-legends-2026</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=63dd731e83704e13b300deff8109f39a&nom=Jeu%204%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/smash-defense</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=381bb01b67a14e7ea30b5623eb36855e&nom=Jeu%205%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/meme-mythwukong</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=665328d407a547f2a003ed3723dedf16&nom=Jeu%206%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/yummy-tales-4</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=c4853541e0434d19a5bfdd8c75887cb5&nom=Jeu%207%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/tap-arrow-away</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=a9964948ad434acfb106811d323e6464&nom=Jeu%208%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/jewel-coloring</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=b4ddb7628afc4a6fbd87b775ccf6f45e&nom=Jeu%209%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/hole-puzzle</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=88d7078602364cfd845f7c2796c456c7&nom=Jeu%2010%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/solitaire-daily</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Fruit%20Ninja</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=2048</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Hill%20Climb%20Racing</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Penalty%20Shootout</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Temple%20Run</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Tetris</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Angry%20Birds</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Drift%20Hunters</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Helix%20Jump</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Jewel%20Blast</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Subway%20Surf</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=GAME_ID_ICI&nom=Crossy%20Road</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=116e0e450a374f24877fa02ad98a2e62&nom=Football%20Rush%203D</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=1561f24d736b4bf292e0ae33059f909f&nom=Bubble%20Pop%20Legend</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=13eabea86f7c4cd993a156258420e9ec&nom=Football%20Legends%202026</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=55e0e53f26824f0f8f689ac52f9009d7&nom=Puzzle%20Game%20(%C3%A0%20renommer)</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://croissantgames.fr/jeu.html?id=ebe613bf6d5b44ad8908c7a36a710b7b&nom=Smash%20Defense</loc>
-    <lastmod>2026-06-17</lastmod>
-    <priority>0.6</priority>
+    <loc>https://croissantgames.fr/jeux/magic-brick-war</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.7</priority>
   </url>
 </urlset>

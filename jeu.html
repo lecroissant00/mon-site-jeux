@@ -289,12 +289,35 @@
     // =========================================
     // Lecture des paramètres URL
     // =========================================
+    // Lecture des paramètres — slug (URL propre) ou params classiques
+    // /jeux/football-rush-3d → slug = "football-rush-3d"
+    // jeu.html?id=xxx&nom=... → fallback params classiques
+    // =========================================
+    const pathParts = window.location.pathname.split('/');
+    const slugFromPath = pathParts[1] === 'jeux' ? pathParts[2] : null;
     const params = new URLSearchParams(window.location.search);
-    const gameId = params.get('id') || '';
-    const gameName = params.get('nom') || 'Jeu inconnu';
-    const gameWidth = parseInt(params.get('w'), 10) || 800;
-    const gameHeight = parseInt(params.get('h'), 10) || 600;
+
+    let gameId = params.get('id') || '';
+    let gameName = params.get('nom') || 'Jeu inconnu';
+    let gameWidth = parseInt(params.get('w'), 10) || 800;
+    let gameHeight = parseInt(params.get('h'), 10) || 600;
     const pageUrl = window.location.href;
+
+    // Si on arrive via une URL propre (/jeux/slug), on charge le jeu depuis Supabase
+    async function initJeu() {
+      if (slugFromPath && typeof fetchJeuParSlug === 'function') {
+        const jeu = await fetchJeuParSlug(slugFromPath);
+        if (jeu) {
+          gameId = jeu.id;
+          gameName = jeu.nom;
+          gameWidth = jeu.width || 800;
+          gameHeight = jeu.height || 600;
+        }
+      }
+      lancerJeu();
+    }
+
+    function lancerJeu() {
 
     // =========================================
     // Mise à jour du titre et du H1
@@ -578,6 +601,11 @@
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    } // fin de lancerJeu()
+
+    // Démarre le chargement du jeu (via slug ou params classiques)
+    initJeu();
   </script>
 
   <!-- SDK GameDistribution -->

@@ -82,7 +82,7 @@ function getAverageRating(stats) {
 async function chargerJeuxDepuisSupabase() {
   try {
     const res = await fetch(
-      `${SUPABASE_REST}/games?actif=eq.true&order=vedette.desc,ordre.asc,date_ajout.asc&select=id,nom,categorie,width,height,image,date_ajout,vedette`,
+      `${SUPABASE_REST}/games?actif=eq.true&order=vedette.desc,ordre.asc,date_ajout.asc&select=id,nom,categorie,width,height,image,date_ajout,vedette,slug`,
       { headers: supabaseHeaders }
     );
     if (!res.ok) throw new Error('Erreur fetch games');
@@ -96,10 +96,29 @@ async function chargerJeuxDepuisSupabase() {
       image: j.image || '',
       emoji: '🎮',
       dateAjout: j.date_ajout ? j.date_ajout.substring(0, 10) : null,
-      vedette: j.vedette || false
+      vedette: j.vedette || false,
+      slug: j.slug || null
     }));
   } catch (err) {
     console.error('Supabase chargerJeuxDepuisSupabase:', err);
     return [];
+  }
+}
+
+// =========================================
+// Charge un jeu depuis Supabase par son slug (pour les URLs propres /jeux/slug)
+// =========================================
+async function fetchJeuParSlug(slug) {
+  try {
+    const res = await fetch(
+      `${SUPABASE_REST}/games?slug=eq.${encodeURIComponent(slug)}&actif=eq.true&limit=1`,
+      { headers: supabaseHeaders }
+    );
+    if (!res.ok) throw new Error('Erreur fetch jeu par slug');
+    const data = await res.json();
+    return data.length > 0 ? data[0] : null;
+  } catch (err) {
+    console.error('Supabase fetchJeuParSlug:', err);
+    return null;
   }
 }

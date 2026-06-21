@@ -574,6 +574,16 @@ async function saveGame() {
   const ordre = parseInt(document.getElementById('f-ordre').value) || 0;
   const vedette = document.getElementById('f-vedette').checked;
 
+  // Génère automatiquement le slug depuis le nom si pas en mode édition
+  const slug = editingId
+    ? undefined // garde le slug existant en modification
+    : nom.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // supprime les accents
+        .replace(/[^a-z0-9\s-]/g, '') // garde lettres, chiffres, tirets
+        .replace(/\s+/g, '-') // espaces → tirets
+        .replace(/-+/g, '-') // tirets multiples → un seul
+        .trim();
+
   if (!id || !nom || !cat) {
     showToast('Game ID, nom et catégorie sont obligatoires', 'error');
     return;
@@ -587,7 +597,7 @@ async function saveGame() {
     [width, height] = format.split('x').map(Number);
   }
 
-  const payload = { id, nom, categorie: cat, width, height, image, ordre, vedette, actif: true };
+  const payload = { id, nom, categorie: cat, width, height, image, ordre, vedette, actif: true, slug };
 
   try {
     let res;
