@@ -290,12 +290,11 @@
     // Lecture des paramètres URL
     // =========================================
     // Lecture des paramètres — slug (URL propre) ou params classiques
-    // /jeux/football-rush-3d → slug = "football-rush-3d"
+    // /jeux/football-rush-3d → Vercel rewrite → jeu.html?slug=football-rush-3d
     // jeu.html?id=xxx&nom=... → fallback params classiques
     // =========================================
-    const pathParts = window.location.pathname.split('/');
-    const slugFromPath = pathParts[1] === 'jeux' ? pathParts[2] : null;
     const params = new URLSearchParams(window.location.search);
+    const slugFromUrl = params.get('slug');
 
     let gameId = params.get('id') || '';
     let gameName = params.get('nom') || 'Jeu inconnu';
@@ -303,10 +302,9 @@
     let gameHeight = parseInt(params.get('h'), 10) || 600;
     const pageUrl = window.location.href;
 
-    // Si on arrive via une URL propre (/jeux/slug), on charge le jeu depuis Supabase
     async function initJeu() {
-      if (slugFromPath && typeof fetchJeuParSlug === 'function') {
-        const jeu = await fetchJeuParSlug(slugFromPath);
+      if (slugFromUrl && typeof fetchJeuParSlug === 'function') {
+        const jeu = await fetchJeuParSlug(slugFromUrl);
         if (jeu) {
           gameId = jeu.id;
           gameName = jeu.nom;
