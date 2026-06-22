@@ -294,7 +294,10 @@
     // jeu.html?id=xxx&nom=... → fallback params classiques
     // =========================================
     const params = new URLSearchParams(window.location.search);
-    const slugFromUrl = params.get('slug');
+    // Vercel rewrite garde l'URL originale visible côté client (/jeux/football-rush-3d)
+    // donc on lit le slug depuis le pathname, pas depuis les query params
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const slugFromUrl = pathParts[0] === 'jeux' ? pathParts[1] : params.get('slug') || null;
 
     let gameId = params.get('id') || '';
     let gameName = params.get('nom') || 'Jeu inconnu';
