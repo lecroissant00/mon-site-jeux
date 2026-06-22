@@ -112,7 +112,7 @@ function buildGenreMenu() {
   genresUniques.forEach(genre => {
     const count = jeux.filter(j => j.categorie === genre).length;
     const a = document.createElement('a');
-    a.href = `categorie.html?cat=${encodeURIComponent(genre)}`;
+    a.href = `/categorie.html?cat=${encodeURIComponent(genre)}`;
     a.innerHTML = `${genre} <span class="genre-count">${count}</span>`;
     menu.appendChild(a);
   });
