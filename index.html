@@ -1,11 +1,137 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');</script>
   <meta charset="UTF-8">
-  <script>
-    // Redirige /jeux/ vers l'accueil si accédé directement sans slug
-    window.location.replace('/');
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CroissantGames — Jeux gratuits en ligne</title>
+  <meta name="description" content="Joue à des centaines de jeux gratuits en ligne sur CroissantGames, sans téléchargement ni inscription. Action, puzzle, course, sport et aventure.">
+  <link rel="canonical" href="https://croissantgames.fr/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="CroissantGames — Jeux gratuits en ligne">
+  <meta property="og:description" content="Joue à des centaines de jeux gratuits en ligne, sans téléchargement.">
+  <meta property="og:image" content="https://croissantgames.fr/assets/og-image.jpg">
+  <meta property="og:url" content="https://croissantgames.fr/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CroissantGames — Jeux gratuits en ligne">
+  <meta name="twitter:description" content="Joue à des centaines de jeux gratuits en ligne, sans téléchargement.">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CroissantGames",
+    "url": "https://croissantgames.fr/",
+    "description": "Jeux gratuits en ligne, sans téléchargement ni inscription."
+  }
   </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5808527177460754" crossorigin="anonymous"></script>
+  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
-<body></body>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo"><a href="index.html">Croissant<span>Games</span></a></div>
+
+    <nav class="main-nav">
+      <div class="genre-dropdown" id="genre-dropdown">
+        <button class="genre-toggle" id="genre-toggle" aria-haspopup="true" aria-expanded="false">
+          Genres ▾
+        </button>
+        <div class="genre-menu" id="genre-menu"></div>
+      </div>
+    </nav>
+
+    <button id="random-game-btn" class="random-btn" type="button">🎲 Jeu au hasard</button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Changer de thème">🌙</button>
+
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Chercher un jeu..." autocomplete="off">
+      <div class="search-suggestions" id="search-suggestions"></div>
+    </div>
+  </header>
+
+  <!-- Pub AdSense -->
+  <div class="ad-banner ad-728x90">
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; height:100%;"
+         data-ad-client="ca-pub-5808527177460754"
+         data-ad-slot="7250048014"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
+
+  <main>
+
+    <!-- À la une (jeux les plus populaires) + pub à droite, hors du cadre -->
+    <div class="featured-layout">
+      <section id="alaune-section" class="games-section featured-section" hidden>
+        <h2>🔥 À la une</h2>
+        <div class="games-grid featured-grid" id="alaune-grid"></div>
+      </section>
+      <div class="ad-banner ad-300x600 featured-side-ad" hidden>
+        <ins class="adsbygoogle"
+             style="display:block; width:100%; height:100%;"
+             data-ad-client="ca-pub-5808527177460754"
+             data-ad-slot="4929366388"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+    </div>
+
+    <!-- Favoris -->
+    <section id="favoris-section" class="games-section" hidden>
+      <h2>❤️ Mes favoris</h2>
+      <div class="games-grid" id="favoris-grid"></div>
+    </section>
+
+    <!-- Récemment joués -->
+    <section id="recents-section" class="games-section" hidden>
+      <h2>🕐 Récemment joués</h2>
+      <div class="games-grid" id="recents-grid"></div>
+    </section>
+
+    <!-- Jeux populaires -->
+    <section class="games-section">
+      <h2>Jeux populaires</h2>
+      <div class="games-grid" id="games-grid">
+        <!-- Skeleton loaders insérés par JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Pub AdSense bas de page -->
+  <div class="ad-banner ad-728x90">
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; height:100%;"
+         data-ad-client="ca-pub-5808527177460754"
+         data-ad-slot="7250048014"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 CroissantGames — Tous droits réservés</p>
+    <a href="mentions-legales.html">Mentions légales</a>
+  </footer>
+
+  <button id="back-to-top" aria-label="Retour en haut">↑</button>
+
+  <script src="js/supabase-stats.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cookie-banner.js"></script>
+  <script src="js/analytics.js"></script>
+
+</body>
 </html>
