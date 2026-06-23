@@ -171,24 +171,26 @@ function getRecents() {
 function createCard(jeu, taille = 'normal') {
   const favs = getFavoris();
   const isFav = favs.includes(jeu.id);
-  const isBig = taille !== 'normal'; // toute taille spéciale utilise le rendu plein-image + overlay
+  const isBig = taille !== 'normal';
 
   const card = document.createElement('div');
-  card.className = 'game-card' + (taille !== 'normal' ? ` featured-${taille}` : '');
+  // Ajoute une classe de catégorie pour les couleurs de placeholder (cat-football, cat-action, etc.)
+  const catClass = 'cat-' + (jeu.categorie || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  card.className = 'game-card ' + catClass + (taille !== 'normal' ? ` featured-${taille}` : '');
 
   const link = document.createElement('a');
   link.href = getJeuUrl(jeu);
   link.style.display = 'block';
   link.style.height = '100%';
 
-  // Vignette : image réelle si fournie, sinon emoji en placeholder
+  // Vignette : image réelle si fournie, sinon emoji en placeholder coloré par catégorie
   const thumb = document.createElement('div');
   thumb.className = 'card-thumb';
   thumb.style.display = 'flex';
   thumb.style.alignItems = 'center';
   thumb.style.justifyContent = 'center';
   thumb.style.fontSize = isBig ? '4rem' : '2.5rem';
-  thumb.style.background = 'var(--bg-secondary)';
+  // Retire le style inline background — la couleur vient maintenant du CSS par catégorie
   if (!isBig) {
     thumb.style.width = '100%';
     thumb.style.aspectRatio = '1';
@@ -301,7 +303,10 @@ function afficherPage() {
 
   visible.forEach((jeu, index) => {
     const taille = (index > 0 && index % 7 === 0) ? 'big' : 'normal';
-    grid.appendChild(createCard(jeu, taille));
+    const card = createCard(jeu, taille);
+    // Délai progressif pour une apparition en cascade (max 0.5s)
+    card.style.animationDelay = `${Math.min(index * 0.04, 0.5)}s`;
+    grid.appendChild(card);
   });
 
   // Affiche le bouton "Voir plus" s'il reste des jeux à charger
