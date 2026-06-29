@@ -93,9 +93,39 @@ function estNouveau(jeu) {
 }
 
 // =========================================
-// Menu déroulant des genres — construit dynamiquement depuis games.json.
-// Ajoute un nouveau genre dans games.json et il apparaît automatiquement ici,
-// triés par ordre alphabétique, sans rien modifier dans le HTML/CSS.
+// =========================================
+// Traduction/normalisation des catégories
+// Corrige les catégories en anglais ou mal formatées vers le français
+// S'applique à l'affichage ET au chargement des jeux depuis Supabase
+// =========================================
+const TRADUCTIONS_CAT = {
+  'action': 'Action', 'adventure': 'Aventure', 'aventure': 'Aventure',
+  'puzzle': 'Puzzle', 'sport': 'Sport', 'sports': 'Sport',
+  'football': 'Football', 'soccer': 'Football',
+  'racing': 'Course', 'course': 'Course', 'race': 'Course',
+  'battle': 'Battle', 'casual': 'Casual', 'simulation': 'Simulation',
+  'match-3': 'Match-3', 'match3': 'Match-3',
+  'bubble shooter': 'Bubble shooter', 'bubble-shooter': 'Bubble shooter',
+  'cards': 'Cartes', 'card': 'Cartes',
+  'shooting': 'Tir', 'shoot': 'Tir',
+  'platformer': 'Plateforme', 'platform': 'Plateforme',
+  'arcade': 'Arcade', 'strategy': 'Stratégie',
+  'rpg': 'RPG', 'horror': 'Horreur',
+  'cooking': 'Cuisine', 'dress up': 'Habillage',
+  'educational': 'Éducatif', 'education': 'Éducatif',
+  'multiplayer': 'Multijoueur', 'io': 'IO',
+  'hypercasual': 'Hypercasual', '2 player': '2 joueurs',
+  'girls': 'Filles', 'boys': 'Garçons',
+  'clicker': 'Clicker', 'idle': 'Idle',
+  'tower defense': 'Tower Defense'
+};
+
+function traduireCategorie(cat) {
+  if (!cat) return cat;
+  return TRADUCTIONS_CAT[cat.toLowerCase()] || cat;
+}
+
+// Menu déroulant des genres — construit dynamiquement depuis Supabase.
 // =========================================
 function buildGenreMenu() {
   const menu = document.getElementById('genre-menu');
@@ -113,7 +143,7 @@ function buildGenreMenu() {
     const count = jeux.filter(j => j.categorie === genre).length;
     const a = document.createElement('a');
     a.href = `/categorie.html?cat=${encodeURIComponent(genre)}`;
-    a.innerHTML = `${genre} <span class="genre-count">${count}</span>`;
+    a.innerHTML = `${traduireCategorie(genre)} <span class="genre-count">${count}</span>`;
     menu.appendChild(a);
   });
 
@@ -222,7 +252,7 @@ function createCard(jeu, taille = 'normal') {
 
   const info = document.createElement('div');
   info.className = 'game-info';
-  info.innerHTML = `<h3>${jeu.nom}</h3><span>${jeu.categorie}</span>`;
+  info.innerHTML = `<h3>${jeu.nom}</h3><span>${traduireCategorie(jeu.categorie)}</span>`;
 
   // Étoiles de notation (moyenne globale, lecture seule sur les cartes)
   const moyenne = getNoteMoyenne(jeu.id);
@@ -421,7 +451,7 @@ function ouvrirSuggestions(terme) {
         ${thumb}
         <div class="search-suggestion-info">
           <div class="suggestion-name">${jeu.nom}</div>
-          <div class="suggestion-cat">${jeu.categorie}</div>
+          <div class="suggestion-cat">${traduireCategorie(jeu.categorie)}</div>
         </div>
       `;
       searchSuggestions.appendChild(a);

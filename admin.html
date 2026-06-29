@@ -544,7 +544,7 @@ function afficherJeux(jeux) {
         <div class="meta">${j.categorie} · ${j.width}×${j.height} · ordre: ${j.ordre || 0} · <span style="font-family:monospace;font-size:0.68rem;">${j.id.substring(0,12)}...</span></div>
       </div>
       <div class="game-row-actions">
-        <button class="btn-vedette ${j.vedette ? 'active' : ''}" onclick="toggleVedette('${j.id}', ${j.vedette})" title="${j.vedette ? 'Retirer de la vedette' : 'Mettre en vedette'}">⭐</button>
+        <button class="btn-vedette ${j.vedette === true ? 'active' : ''}" onclick="toggleVedette('${j.id}', ${j.vedette === true})" title="${j.vedette ? 'Retirer de la vedette' : 'Mettre en vedette'}">⭐</button>
         <button class="btn-edit" onclick="editerJeu('${j.id}')">✏️ Modifier</button>
         <button class="btn-delete" onclick="supprimerJeu('${j.id}', '${j.nom.replace(/'/g, "\\'")}')">🗑️ Supprimer</button>
       </div>
@@ -568,7 +568,31 @@ function filtrerJeux(terme) {
 async function saveGame() {
   const id = document.getElementById('f-id').value.trim();
   const nom = document.getElementById('f-nom').value.trim();
-  const cat = document.getElementById('f-cat').value.trim();
+  const catBrut = document.getElementById('f-cat').value.trim();
+
+  // Dictionnaire de traduction/normalisation des catégories
+  const traductions = {
+    'action': 'Action', 'adventure': 'Aventure', 'aventure': 'Aventure',
+    'puzzle': 'Puzzle', 'sport': 'Sport', 'sports': 'Sport',
+    'football': 'Football', 'soccer': 'Football',
+    'racing': 'Course', 'course': 'Course', 'race': 'Course',
+    'battle': 'Battle', 'casual': 'Casual', 'simulation': 'Simulation',
+    'match-3': 'Match-3', 'match3': 'Match-3',
+    'bubble shooter': 'Bubble shooter', 'bubble-shooter': 'Bubble shooter',
+    'cards': 'Cartes', 'card': 'Cartes',
+    'shooting': 'Tir', 'shoot': 'Tir',
+    'platformer': 'Plateforme', 'platform': 'Plateforme',
+    'arcade': 'Arcade', 'strategy': 'Stratégie',
+    'rpg': 'RPG', 'horror': 'Horreur',
+    'cooking': 'Cuisine', 'dress up': 'Habillage',
+    'educational': 'Éducatif', 'education': 'Éducatif',
+    'multiplayer': 'Multijoueur', 'io': 'IO',
+    'hypercasual': 'Hypercasual', '2 player': '2 joueurs',
+    'girls': 'Filles', 'boys': 'Garçons',
+    'clicker': 'Clicker', 'idle': 'Idle',
+    'tower defense': 'Tower Defense'
+  };
+  const cat = traductions[catBrut.toLowerCase()] || catBrut;
   const format = document.getElementById('f-format').value;
   const image = document.getElementById('f-image').value.trim();
   const ordre = parseInt(document.getElementById('f-ordre').value) || 0;
@@ -656,15 +680,21 @@ function editerJeu(id) {
 // Basculer vedette rapidement sans ouvrir le formulaire
 // =========================================
 async function toggleVedette(id, estVedette) {
+  // Force le boolean pour éviter les problèmes avec null/undefined venant de Supabase
+  const actuellement = estVedette === true;
+  const nouvelleValeur = !actuellement;
   try {
     const res = await fetch(`${REST}/games?id=eq.${id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify({ vedette: !estVedette })
+      body: JSON.stringify({ vedette: nouvelleValeur })
     });
     if (res.ok) {
-      showToast(!estVedette ? '⭐ Mis en vedette !' : 'Retiré de la vedette');
+      showToast(nouvelleValeur ? '⭐ Mis en vedette !' : 'Retiré de la vedette');
       chargerJeux();
+    } else {
+      const err = await res.json();
+      showToast(err.message || 'Erreur lors de la mise à jour', 'error');
     }
   } catch (e) {
     showToast('Erreur réseau', 'error');
